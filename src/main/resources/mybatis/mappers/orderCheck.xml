@@ -76,8 +76,8 @@
 	<!-- order 승인2 -> stock_in table에 새로운 데이터 입력 -->
 	<insert id="confirmAndInsertStockIn" parameterType="map">
 		insert into
-		stock_in (order_id, in_date, checked_in, branch_id) values
-		(#{orderId}, (SYSDATE + INTERVAL '3' DAY), '0', #{branchId})
+		stock_in (order_id, checked_in, branch_id) values
+		(#{orderId}, '0', #{branchId})
 	</insert>
 
 	<!-- order 승인3 -> stock_in 테이블의 in_id 받아오기 -->

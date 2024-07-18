@@ -40,7 +40,7 @@ public class StockOutController {
 	}
     
     @RequestMapping("/form")
-    public String moveToStockOutFrom(HttpSession session, @RequestParam(value = "keyword", required = false) String keyword, Model model) {
+    public String moveToStockOutFrom(HttpSession session, Model model) {
     	UserVo vo = (UserVo)session.getAttribute("authUser");
 		session.setAttribute("authUser", vo);
 		return "branches/branch_stock_out_form";

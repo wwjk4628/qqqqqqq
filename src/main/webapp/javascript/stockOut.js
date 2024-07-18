@@ -1,44 +1,65 @@
 document.addEventListener('DOMContentLoaded', function() {
-	const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-    // 페이지 로드 시 초기 데이터로 테이블을 업데이트합니다.
+    
+    // 페이지 로드 시 초기 데이터로 테이블을 업데이트하고 로컬 스토리지에 저장 공간 마련
     fetch('http://localhost:8080/Inventory/branch/stockout/getListForform')
         .then(response => response.json())
         .then(data => {
             updateSearchResults(data);
-            loadLocalStorage();
+            initializeLocalStorage(data);  // 초기 데이터로 로컬 스토리지 설정
         })
         .catch(error => console.error('Error:', error));
 
-    // 검색 폼 제출 시 AJAX 요청을 보냅니다.
+    // 검색 폼 제출 시 AJAX 요청
     document.getElementById('search-form').addEventListener('submit', function(event) {
-        event.preventDefault(); // 폼의 기본 제출 동작을 방지합니다.
+        event.preventDefault(); // 폼의 기본 제출 동작을 방지
         const keyword = document.querySelector('input[name="keyword"]').value;
 
-        saveLocalStorage();
 
         fetch('http://localhost:8080/Inventory/branch/stockout/search', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded',  
-            [csrfHeader]: csrfToken  },
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', [csrfHeader]: csrfToken },
             body: new URLSearchParams({ 'keyword': keyword })
         })
         .then(response => response.json())
         .then(data => {
             updateSearchResults(data);
-            loadLocalStorage(); // 검색 후 로컬 스토리지 데이터 로드
         })
         .catch(error => console.error('Error:', error));
     });
 
-    // 검색어 초기화
+    // 검색어 초기화 로직
     window.resetKeyword = function() {
         document.querySelector('input[name="keyword"]').value = '';
-        document.getElementById('search-form').dispatchEvent(new Event('submit')); // 폼 제출 이벤트를 강제로 발생시킵니다.
+        document.getElementById('search-form').dispatchEvent(new Event('submit')); // 폼 제출 이벤트를 강제로 발생
     };
+
+    // 페이지를 떠날 때 로컬 스토리지 초기화
+    window.addEventListener('beforeunload', function() {
+        localStorage.clear();
+    });
 });
 
-// 검색 결과를 페이지에 업데이트합니다.
+// 초기 데이터로 로컬 스토리지 설정
+function initializeLocalStorage(data) {
+    const quantities = {};
+    const comments = {};
+    const bookNames = {};
+
+    data.forEach(item => {
+        const bookCode = item.bookCode;
+        quantities[bookCode] = quantities[bookCode] || 0;
+        comments[bookCode] = comments[bookCode] || '';
+        bookNames[bookCode] = item.bookName;
+    });
+
+    localStorage.setItem('quantities', JSON.stringify(quantities));
+    localStorage.setItem('comments', JSON.stringify(comments));
+    localStorage.setItem('bookNames', JSON.stringify(bookNames));
+}
+
+// 검색 결과를 페이지에 업데이트
 function updateSearchResults(data) {
     const tableBody = document.getElementById('table-body');
     tableBody.innerHTML = ''; // 기존 결과를 지웁니다.
@@ -47,10 +68,10 @@ function updateSearchResults(data) {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${item.bookName}</td>
+            	<input type="hidden" name="bookCode" value="${item.bookCode}">
+                <input type="hidden" name="bookName" value="${item.bookName}">
             <td>${item.inventory}</td>
             <td>
-                <input type="hidden" name="bookCode" value="${item.bookCode}">
-                <input type="hidden" name="bookName" value="${item.bookName}">
                 <input type="number" name="quantity" min="0" max="${item.inventory}"
                     data-book-code="${item.bookCode}"
                     oninput="validateAndHandleQuantity(this, ${item.inventory})">
@@ -90,9 +111,8 @@ function validateAndHandleQuantity(input, max) {
 }
 
 function saveLocalStorage() {
-    const quantities = {};
-    const comments = {};
-    const bookNames = {};
+    const quantities = JSON.parse(localStorage.getItem('quantities') || '{}');
+    const comments = JSON.parse(localStorage.getItem('comments') || '{}');
 
     document.querySelectorAll('input[name="quantity"]').forEach(input => {
         const bookCode = input.dataset.bookCode;
@@ -108,17 +128,8 @@ function saveLocalStorage() {
         }
     });
 
-    document.querySelectorAll('input[name="bookCode"]').forEach(input => {
-        const bookCode = input.value;
-        const bookName = input.nextElementSibling.value; // bookName hidden input 바로 다음에 있는 bookName
-        if (bookCode) {
-            bookNames[bookCode] = bookName;
-        }
-    });
-
     localStorage.setItem('quantities', JSON.stringify(quantities));
     localStorage.setItem('comments', JSON.stringify(comments));
-    localStorage.setItem('bookNames', JSON.stringify(bookNames));
 }
 
 // 로드 함수
@@ -141,6 +152,7 @@ function loadLocalStorage() {
             textarea.disabled = (quantities[bookCode] <= 0);
         }
     });
+    saveLocalStorage();
 }
 
 // 모달 닫기 함수

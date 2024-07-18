@@ -29,8 +29,8 @@ public class StockDaoImpl implements StockDao {
 
 	@Override
 	public boolean stockInCheck(String inId) {
-		sqlSession.update("stock.confirmStockInCheckedIn", inId);
-		return true;
+		int successUpdate = sqlSession.update("stock.confirmStockInCheckedIn", inId);
+		return successUpdate == 1;
 	}
 
 	@Override
