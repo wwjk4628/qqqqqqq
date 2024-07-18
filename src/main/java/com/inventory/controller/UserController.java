@@ -82,7 +82,8 @@ public class UserController {
 	public String loginform () {
 		return "users/loginform";
 	}
-//	
+
+	
 //	@PostMapping("/login")
 //	public String loginAction(@RequestParam(value="name", required=false, defaultValue="") String name,
 //			@RequestParam(value="password", required=false, defaultValue="") String password,

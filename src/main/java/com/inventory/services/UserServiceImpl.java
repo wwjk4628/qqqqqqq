@@ -2,6 +2,7 @@ package com.inventory.services;
 
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -87,5 +88,5 @@ public class UserServiceImpl implements UserService {
 	public UserVo getUserByNameForLogin(String username) {
 		return userDao.findByUsernameForLogin(username);
 	}
-
+	
 }
