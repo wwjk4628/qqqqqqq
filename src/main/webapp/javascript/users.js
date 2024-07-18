@@ -1,3 +1,29 @@
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const errorParam = urlParams.get('error');
+            if (errorParam) {
+                if (errorParam === 'unauthorized') {
+                    alert('로그인이 필요합니다.');
+                } else {
+                    alert('아이디 또는 비밀번호가 잘못되었습니다.');
+                }
+            }
+        });
+
+        function validateLoginForm(event) {
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+
+            if (username === '' || password === '') {
+                alert('아이디와 패스워드를 모두 입력해주세요.');
+                return false; // 폼 제출을 막음
+            }
+
+            // 추가적인 클라이언트 측 유효성 검사를 여기서 수행할 수 있음
+
+            return true; // 폼 제출을 허용
+        }
+
 function checkName(event) {
 	console.log("작동 함!");
 	//	이벤트 발생 객체 
