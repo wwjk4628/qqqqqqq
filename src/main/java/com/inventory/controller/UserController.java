@@ -60,6 +60,10 @@ public class UserController {
 		return "users/joinsuccess";
 	}
 	
+	@GetMapping("/waiting")
+	public String waitingAuthCode() {
+		return "users/authcode";
+	}
 	
 	//	중복 이메일 체크(API) - 응답을 Json으로 
 	@ResponseBody	//	메시지 컨버터 

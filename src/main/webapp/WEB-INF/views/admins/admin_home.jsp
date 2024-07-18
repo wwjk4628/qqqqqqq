@@ -8,8 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>관리자 디폴트 페이지</title>
 
-<link rel="stylesheet" type="text/css"
-	href="<c:url value='/css/admins.css'/>">
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/admins.css'/>">
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/admin_includes/navigation.jsp"%>

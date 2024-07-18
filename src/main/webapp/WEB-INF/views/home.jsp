@@ -17,7 +17,7 @@
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background: linear-gradient(135deg, #72edf2 10%, #5151e5 100%);
         }
         .container {
             text-align: center;
