@@ -1,6 +1,7 @@
 package com.inventory.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,10 @@ public class UserController {
 	private PasswordEncoder passwordEncoder;
 	
 	@GetMapping("/join")
-	public String join() {
+	public String join(Model model) {
+		// 지점 목록을 모델에 추가
+		List<UserVo> branches = userService.getAllBranches();
+		model.addAttribute("branches", branches);
 		return "users/join";
 	}
 	
@@ -60,6 +64,10 @@ public class UserController {
 		return "users/joinsuccess";
 	}
 	
+	@GetMapping("/waiting")
+	public String waitingAuthCode() {
+		return "users/authcode";
+	}
 	
 	//	중복 이메일 체크(API) - 응답을 Json으로 
 	@ResponseBody	//	메시지 컨버터 
@@ -78,7 +86,8 @@ public class UserController {
 	public String loginform () {
 		return "users/loginform";
 	}
-//	
+
+	
 //	@PostMapping("/login")
 //	public String loginAction(@RequestParam(value="name", required=false, defaultValue="") String name,
 //			@RequestParam(value="password", required=false, defaultValue="") String password,

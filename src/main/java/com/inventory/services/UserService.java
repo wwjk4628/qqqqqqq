@@ -27,4 +27,6 @@ public interface UserService {
 	
 	//	인증 체크 메서드 
 	public boolean isAuthenticated(HttpServletRequest request);
+	//	지점 리스트
+	public List<UserVo> getAllBranches();
 }

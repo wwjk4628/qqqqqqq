@@ -8,22 +8,28 @@
     <meta charset="UTF-8">
     <title>My Home: Login</title>
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/users.css'/>">
+    <script src="<c:url value="/javascript/users.js"/>"></script>
 </head>
 <body>
-    <form id="login-form" 
-          name="loginform" 
-          method="POST" 
-          action="<c:url value='/user/login'/>">
-        
-        <label class="block-label" for="username">아이디</label> 
-        <input id="username" name="username" type="text" value=""> 
+    <div class="container">
+        <h2>로그인</h2>
+        <form id="login-form" 
+              name="loginform" 
+              method="POST" 
+              action="<c:url value='/user/login'/>"
+              onsubmit="return validateLoginForm(event)">
+            
+            <label class="block-label" for="username">아이디</label> 
+            <input id="username" name="username" type="text" value=""> 
 
-        <label class="block-label" for="password">패스워드</label> 
-        <input id="password" name="password" type="password" value="">
+            <label class="block-label" for="password">패스워드</label> 
+            <input id="password" name="password" type="password" value="">
 
-        <sec:csrfInput/>
+            <sec:csrfInput/>
 
-        <input type="submit" value="로그인">
-    </form>
+            <input type="submit" value="로그인">
+        </form>
+    </div>
+
 </body>
 </html>

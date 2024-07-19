@@ -72,8 +72,59 @@
   
   
   <!-- 공통 에러 페이지: Spring 앱 바깥에서 일어난 예외 -->
-  <error-page>
-    <error-code>404</error-code>
-    <location>/views/errors/error.404.jsp</location>
-  </error-page>
+  
+<!-- 400 오류 페이지 설정 -->
+    <error-page>
+        <error-code>400</error-code>
+        <location>/error/400</location>
+    </error-page>
+
+    <!-- 403 오류 페이지 설정 -->
+    <error-page>
+        <error-code>403</error-code>
+        <location>/error/403</location>
+    </error-page>
+
+    <!-- 404 오류 페이지 설정 -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error/404</location>
+    </error-page>
+
+    <!-- 500 오류 페이지 설정 -->
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error/500</location>
+    </error-page>
+
+    <!-- 일반적인 예외 처리 페이지 설정 -->
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/error/general</location>
+    </error-page>
+
+    <!-- NullPointerException 처리 페이지 설정 -->
+    <error-page>
+        <exception-type>java.lang.NullPointerException</exception-type>
+        <location>/error/500</location>
+    </error-page>
+
+    <!-- IllegalArgumentException 처리 페이지 설정 -->
+    <error-page>
+        <exception-type>java.lang.IllegalArgumentException</exception-type>
+        <location>/error/400</location>
+    </error-page>
+
+    <!-- NumberFormatException 처리 페이지 설정 -->
+    <error-page>
+        <exception-type>java.lang.NumberFormatException</exception-type>
+        <location>/error/400</location>
+    </error-page>
+
+    <!-- ArrayIndexOutOfBoundsException 처리 페이지 설정 -->
+    <error-page>
+        <exception-type>java.lang.ArrayIndexOutOfBoundsException</exception-type>
+        <location>/error/500</location>
+    </error-page>
+  
 </web-app>
