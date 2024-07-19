@@ -28,6 +28,7 @@ h2 {
         .container input[type="password"],
         .container input[type="email"],
         .container input[type="button"],
+        .container select,
         .container button {
             width: 100%;
             padding: 10px;

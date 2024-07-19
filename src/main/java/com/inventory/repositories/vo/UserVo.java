@@ -23,6 +23,14 @@ public class UserVo {
 		this.branchName = branchName;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	//	생성자
 	public UserVo () {
 		
