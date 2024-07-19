@@ -11,14 +11,10 @@
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/users.css'/>">
 </head>
 <body>
-	<div id="container">
-		<div id="wrapper">
-			<div id="content">
+  <div class="joinsuccess-box">
 	<h1>Join Success</h1>
 	<p>가입 승인 대기 중</p>
 	<a href="<c:url value="/main"/>">메인으로 돌아가기</a>
-			</div>
-		</div>
-	</div>
+  </div>
 </body>
 </html>

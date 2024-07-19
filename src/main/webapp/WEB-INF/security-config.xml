@@ -13,18 +13,20 @@
         <intercept-url pattern="/main" access="permitAll"/>
         <intercept-url pattern="/" access="permitAll"/>
         <intercept-url pattern="/user/**" access="permitAll"/>
-        <intercept-url pattern="/branch/**" access="isAuthenticated()"/>
+        <intercept-url pattern="/branch/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
         <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/css/**" access="permitAll"/> <!-- CSS 파일에 대한 접근 허용 -->
         <intercept-url pattern="/js/**" access="permitAll"/> <!-- JavaScript 파일에 대한 접근 허용 -->
         <intercept-url pattern="/javascript/**" access="permitAll"/> <!-- JavaScript 파일에 대한 접근 허용 -->
         <intercept-url pattern="/images/**" access="permitAll"/> <!-- 이미지 파일에 대한 접근 허용 -->
         <intercept-url pattern="/logout" access="permitAll"/> <!-- 로그아웃 URL에 대한 접근 허용 -->
+        <intercept-url pattern="/error/**" access="permitAll"/> <!-- 로그아웃 URL에 대한 접근 허용 -->
         <intercept-url pattern="/**" access="hasRole('ROLE_ADMIN')"/> <!-- 관리자는 모든 페이지에 접근 허용 -->
         
         <form-login login-page="/user/login" 
         			login-processing-url="/user/login"
-        			authentication-success-handler-ref="customAuthenticationSuccessHandler"/>
+        			authentication-success-handler-ref="customAuthenticationSuccessHandler"
+        			authentication-failure-url="/user/login?error=ture"/>
         <logout logout-url="/logout" logout-success-url="/main"/>
     </http>
 
@@ -37,6 +39,8 @@
 	<!--  커스텀 CumtomUserDetailsService 빈 정의 -->
 	<beans:bean id="customUserDetailsService" class="com.inventory.security.CustomUserDetailsService"/>
 
+	<!--  커스텀 AuthenticationEntryPoint 빈 정의 -->
+	<beans:bean id ="customAuthenticationEntryPoint" class="com.inventory.security.CustomAuthenticationEntryPoint"/>
 
     <!-- 인증 관리자 설정 -->
     <authentication-manager>
