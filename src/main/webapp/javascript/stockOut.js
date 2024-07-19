@@ -104,6 +104,9 @@ function handleQuantityChange(input) {
     if (!textarea) return;
 
     const quantity = parseInt(input.value, 10) || 0;
+    if (quantity <= 0){
+		textarea.value = '';
+	}
     textarea.disabled = quantity <= 0;
     saveLocalStorage();
 }
@@ -233,11 +236,40 @@ function addGije() {
                     <p><strong>교재명:</strong> ${bookName}</p>
                     <p><strong>수량:</strong> ${quantity}</p>
                     <p><strong>코멘트:</strong> ${comment}</p>
+                    <button type="button" onclick="deleteGije('${bookCode}')" class="delete">삭제</button>
                     <hr>
                 </div>
             `;
         }
     });
+}
+
+function deleteGije(bookCode) {
+    const quantities = JSON.parse(localStorage.getItem('quantities') || '{}');
+    const comments = JSON.parse(localStorage.getItem('comments') || '{}');
+    
+    if (comments.hasOwnProperty(bookCode)){
+		comments[bookCode] = '';
+		localStorage.setItem('comments', JSON.stringify(comments));
+		
+		const textarea = document.querySelector(`textarea[data-book-code="${bookCode}"]`);
+        if(textarea){
+			textarea.value = '';
+		}
+	}
+    
+    if (quantities.hasOwnProperty(bookCode)) {
+        quantities[bookCode] = 0; 
+        localStorage.setItem('quantities', JSON.stringify(quantities));
+        addGije();  // 모달 업데이트
+        
+        const input = document.querySelector(`input[data-book-code="${bookCode}"]`);
+        if (input) {
+            input.value = null;
+        }
+        
+    }
+    loadLocalStorage();
 }
 
 // 폼 제출 함수

@@ -256,11 +256,28 @@ function addGije() {
                 <div>
                     <p><strong>교재명:</strong> ${bookName}</p>
                     <p><strong>수량:</strong> ${quantity}</p>
+                    <button type="button" onclick="deleteGije('${bookCode}')" class="delete">삭제</button>
                     <hr>
                 </div>
             `;
         }
     });
+}
+
+function deleteGije(bookCode) {
+    const quantities = JSON.parse(localStorage.getItem('quantities') || '{}');
+    
+    if (quantities.hasOwnProperty(bookCode)) {
+        quantities[bookCode] = 0; 
+        localStorage.setItem('quantities', JSON.stringify(quantities));
+        addGije();  // 모달 업데이트
+
+        
+        const input = document.querySelector(`input[data-book-code="${bookCode}"]`);
+        if (input) {
+            input.value = null;
+        }
+    }
 }
 
 // 폼 제출 함수
