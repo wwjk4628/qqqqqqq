@@ -51,7 +51,7 @@
 	<!-- stock out id 받아오기 -->
 	<select id="getStockOutIdByBranchId" parameterType="String" resultType="int">
 		SELECT out_id FROM stock_out WHERE branch_id = #{branchId}
-		ORDER BY out_date DESC FETCH FIRST 1 ROW ONLY
+		ORDER BY out_id DESC FETCH FIRST 1 ROW ONLY
 	</select>
 	
 	<!-- outDetail 데이터 입력 -->
@@ -68,7 +68,7 @@
 	<!-- 비밀 코드 -->
 	<select id ="getStockInIdBybranchId" parameterType="String" resultType="int">
 		SELECT in_id FROM stock_in WHERE branch_id = #{branchId}
-		ORDER BY in_date DESC FETCH FIRST 1 ROW ONLY
+		ORDER BY in_id DESC FETCH FIRST 1 ROW ONLY
 	</select> 
 	
 	<!-- 비밀 코드 2 -> stock_in table에 새로운 데이터 입력 -->
