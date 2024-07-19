@@ -153,7 +153,8 @@ function initializeLocalStorage(data) {
 // 입력값을 필터링하는 함수
 function handleQuantityInput(input) {
     const value = input.value.replace(/[^0-9]/g, '');
-    input.value = value;
+    
+    input.value = Math.max(value, 0);
     saveLocalStorage();
 }
 
@@ -175,6 +176,7 @@ function saveLocalStorage() {
     });
 
     localStorage.setItem('quantities', JSON.stringify(quantities));
+    addGije();
 }
 
 // 로드 함수
@@ -233,6 +235,32 @@ function showConfirmationModal() {
 
     // 모달을 보여줍니다.
     modal.style.display = 'block';
+}
+
+function addGije() {
+    const gije = document.getElementById('gije');
+    gije.innerHTML = ''; // 기존 내용을 지움
+
+    // LocalStorage에서 수량과 코멘트를 불러옴
+    const quantities = JSON.parse(localStorage.getItem('quantities') || '{}');
+    const bookNames = JSON.parse(localStorage.getItem('bookNames') || '{}');
+
+    // LocalStorage의 모든 항목 불러오기
+    Object.keys(quantities).forEach(bookCode => {
+        const quantity = quantities[bookCode];
+        const bookName = bookNames[bookCode] || '정보 없음';
+        
+        // 수량이 0보다 큰 경우만 모달에 추가
+        if (quantity > 0) {
+            gije.innerHTML += `
+                <div>
+                    <p><strong>교재명:</strong> ${bookName}</p>
+                    <p><strong>수량:</strong> ${quantity}</p>
+                    <hr>
+                </div>
+            `;
+        }
+    });
 }
 
 // 폼 제출 함수
