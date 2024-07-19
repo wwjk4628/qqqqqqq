@@ -5,17 +5,32 @@ public class UserVo {
 	private Long no;
 	
 	private String name;
+	private String email;
 	
 	private String password;
 	
 	private String branchId;
+	private String branchName;
 	
 	private String authCode;
 	
 	
+	public String getBranchName() {
+		return branchName;
+	}
+
+	public void setBranchName(String branchName) {
+		this.branchName = branchName;
+	}
+
 	//	생성자
 	public UserVo () {
 		
+	}
+
+	public UserVo(String branchId, String branchName) {
+		this.branchId = branchId;
+		this.branchName = branchName;
 	}
 
 	public UserVo(Long no, String name, String password, String branchId, String authCode) {
@@ -27,6 +42,18 @@ public class UserVo {
 		this.authCode = authCode;
 	}
 	
+
+	public UserVo(Long no, String name, String email, String password, String branchId, String branchName,
+			String authCode) {
+		super();
+		this.no = no;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.branchId = branchId;
+		this.branchName = branchName;
+		this.authCode = authCode;
+	}
 
 	public UserVo (Long no, String name, String branchId, String authCode) {
 		this.no = no;

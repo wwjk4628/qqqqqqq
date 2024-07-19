@@ -34,7 +34,7 @@ function checkName(event) {
 	const name = frm.name.value.trim();
 	
 	if (name.length === 0) {
-		alert("이메일을 입력하세요!");
+		alert("이름을 입력하세요!");
 		return;
 	}
 	

@@ -23,4 +23,6 @@ public interface UserDao {
 	public int delete(long no);
 	//	계정 승인 (auth_code 수정)
 	public int confirm(int no, int id);
+	//	지점 목록
+	public List<UserVo> getAllBranches();
 }

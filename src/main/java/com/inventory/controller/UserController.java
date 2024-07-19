@@ -1,6 +1,7 @@
 package com.inventory.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,10 @@ public class UserController {
 	private PasswordEncoder passwordEncoder;
 	
 	@GetMapping("/join")
-	public String join() {
+	public String join(Model model) {
+		// 지점 목록을 모델에 추가
+		List<UserVo> branches = userService.getAllBranches();
+		model.addAttribute("branches", branches);
 		return "users/join";
 	}
 	

@@ -88,5 +88,10 @@ public class UserServiceImpl implements UserService {
 	public UserVo getUserByNameForLogin(String username) {
 		return userDao.findByUsernameForLogin(username);
 	}
+
+	@Override
+	public List<UserVo> getAllBranches() {
+		return userDao.getAllBranches();
+	}
 	
 }
