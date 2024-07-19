@@ -32,7 +32,7 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public boolean confirnStockIn(StockVo vo) {
+	public boolean confirmStockIn(StockVo vo) {
 		return stockDao.confirmStockIn(vo);
 	}
 

@@ -19,7 +19,7 @@
 	<div class="content">
 		<h1>입고</h1>
 		<h3 class="parent">
-			<a href="<c:url value="/branch/initial/setting"/>">발주 외 입고</a>
+			<a href="<c:url value="/branch/initial/setting/form"/>">발주 외 입고</a>
 		</h3>
 		<table border="1">
 			<tr>

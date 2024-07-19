@@ -2,6 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -32,13 +34,43 @@
 		<table>
 			<tr>
 				<th>번호</th>
-				<th onclick="updateOrderBy('kindcode')">분류</th>
-				<th>book_name</th>
-				<th onclick="updateOrderBy('price')">price</th>
-				<th onclick="updateOrderBy('inventory')">inventory</th>
-				<th>재고*가격</th>
-				<th onclick="updateOrderBy('inDate')">최근 입고일</th>
-        		<th onclick="updateOrderBy('outDate')">최근 출고일</th>
+				<th onclick="updateOrderBy('kindcode')">분류
+                    <c:choose>
+                        <c:when test="${fn:contains(param.orderBy, 'kindcode asc')}">▲</c:when>
+                        <c:when test="${fn:contains(param.orderBy, 'kindcode desc')}">▼</c:when>
+                    </c:choose>
+                </th>
+                <th onclick="updateOrderBy('bookName')">book_name
+                    <c:choose>
+                        <c:when test="${fn:contains(param.orderBy, 'bookName asc')}">▲</c:when>
+                        <c:when test="${fn:contains(param.orderBy, 'bookName desc')}">▼</c:when>
+                    </c:choose>
+                </th>
+                <th onclick="updateOrderBy('price')">price
+                    <c:choose>
+                        <c:when test="${fn:contains(param.orderBy, 'price asc')}">▲</c:when>
+                        <c:when test="${fn:contains(param.orderBy, 'price desc')}">▼</c:when>
+                    </c:choose>
+                </th>
+                <th onclick="updateOrderBy('inventory')">inventory
+                    <c:choose>
+                        <c:when test="${fn:contains(param.orderBy, 'inventory asc')}">▲</c:when>
+                        <c:when test="${fn:contains(param.orderBy, 'inventory desc')}">▼</c:when>
+                    </c:choose>
+                </th>
+                <th>재고*가격</th>
+                <th onclick="updateOrderBy('inDate')">최근 입고일
+                    <c:choose>
+                        <c:when test="${fn:contains(param.orderBy, 'inDate asc')}">▲</c:when>
+                        <c:when test="${fn:contains(param.orderBy, 'inDate desc')}">▼</c:when>
+                    </c:choose>
+                </th>
+                <th onclick="updateOrderBy('outDate')">최근 출고일
+                    <c:choose>
+                        <c:when test="${fn:contains(param.orderBy, 'outDate asc')}">▲</c:when>
+                        <c:when test="${fn:contains(param.orderBy, 'outDate desc')}">▼</c:when>
+                    </c:choose>
+                </th>
 			</tr>
 			<c:forEach items="${list }" var="vo" varStatus="status">
 				<tr>
