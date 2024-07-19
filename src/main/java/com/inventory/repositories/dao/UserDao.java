@@ -25,4 +25,9 @@ public interface UserDao {
 	public int confirm(int no, int id);
 	//	지점 목록
 	public List<UserVo> getAllBranches();
+	//	프로필 정보 로드
+	public UserVo selectUserForProfile(String name);
+	//	비밀번호 변경
+	public void updatePassword(String name, String newPassword);
+	
 }

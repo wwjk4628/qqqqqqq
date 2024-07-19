@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -31,14 +30,9 @@
                     href="<c:url value='/branch/stockout/list' />">출고</a></li>
             </ul>
             <ul class="navbar-nav ml-auto">
-                <c:if test="${sessionScope.authUser.authCode == '2'}">
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-secondary" href="<c:url value='/admin/home' />">관리자 페이지</a>
-                    </li>
-                </c:if>
                 <li class="nav-item">
                     <span class="navbar-text text-white">
-                        <c:out value="${sessionScope.username}"/> 님
+                        <a href="<c:url value='/user/mypage'/>" class="text-white"><c:out value="${sessionScope.authUser.name}"/> 님</a>
                     </span>
                 </li>
                 <li class="nav-item"><a class="nav-link"
