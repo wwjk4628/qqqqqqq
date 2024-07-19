@@ -141,7 +141,7 @@ function initializeLocalStorage(data) {
 	// bookCode 기반의 빈 배열 만들어놓기
     data.forEach(item => {
         const bookCode = item.bookCode;
-        quantities[bookCode] = quantities[bookCode] || 0;
+        quantities[bookCode] = null;
         bookNames[bookCode] = item.bookName;
     });
 

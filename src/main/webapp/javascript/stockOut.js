@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             updateSearchResults(data);
             initializeLocalStorage(data);  // 초기 데이터로 로컬 스토리지 설정
+            loadLocalStorage();
         })
         .catch(error => console.error('Error:', error));
 
@@ -52,7 +53,7 @@ function initializeLocalStorage(data) {
 	// bookCode 기반의 빈 배열 만들어놓기
     data.forEach(item => {
         const bookCode = item.bookCode;
-        quantities[bookCode] = quantities[bookCode] || 0;
+        quantities[bookCode] = null;
         comments[bookCode] = comments[bookCode] || '';
         bookNames[bookCode] = item.bookName;
     });
@@ -259,7 +260,7 @@ function deleteGije(bookCode) {
 	}
     
     if (quantities.hasOwnProperty(bookCode)) {
-        quantities[bookCode] = 0; 
+        quantities[bookCode] = null; 
         localStorage.setItem('quantities', JSON.stringify(quantities));
         addGije();  // 모달 업데이트
         
