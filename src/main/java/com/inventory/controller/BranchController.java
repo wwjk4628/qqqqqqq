@@ -61,7 +61,7 @@ public class BranchController {
 		params.put("branchId", userVo.getBranchId());
 	    params.put("keyword", "");
 	    params.put("check", "");
-	    params.put("orderBy", "CASE WHEN inventory > 0 THEN 1 ELSE 2 END ASC, kindcode ASC");
+	    params.put("orderBy", "kindcode desc, book_name asc");
 		return bookInvenService.invenList(params);
 	}
 	
@@ -69,7 +69,8 @@ public class BranchController {
     @ResponseBody
     public List<BookInventoryVo> search(HttpSession session, @RequestParam("keyword") String keyword,
     		@RequestParam(value="check", required = false) String check,
-    		@RequestParam(value = "orderBy", defaultValue = "CASE WHEN inventory > 0 THEN 1 ELSE 2 END ASC, kindcode ASC") String orderBy) {
+    		@RequestParam(value = "orderBy", defaultValue = "kindcode desc, book_name asc") String orderBy,
+    		@RequestParam(value = "stockInDate", required = false) String stockInDate) {
         UserVo vo = (UserVo) session.getAttribute("authUser");
         
         Map <String, Object> params = new HashMap<>();
@@ -77,6 +78,7 @@ public class BranchController {
 	    params.put("keyword", keyword != null ? keyword : "");
 	    params.put("check", check);
 	    params.put("orderBy", orderBy != null ? orderBy.trim() : null);
+	    params.put("stockInDate", stockInDate);
         
         return bookInvenService.invenList(params);
     }

@@ -14,8 +14,8 @@
 <title>지점 관리 시스템</title>
 <link rel="stylesheet" type="text/css"
 	href="<c:url value='/css/branches.css'/>">
-<script src="<c:url value='/javascript/inven.js'/>"></script>
 
+<script src="<c:url value='/javascript/inven.js'/>"></script>
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/branch_includes/navigation.jsp"%>

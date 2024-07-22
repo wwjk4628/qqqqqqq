@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
         
+    // 입력 날짜 저장하는 변수
+    let rememberedStockInDate = '';
+    
     //	초기 페이지 로드를 위한 리스트 받기
     fetch('http://localhost:8080/Inventory/branch/initialList')
     .then(response => response.json())
@@ -43,11 +46,21 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         sendAjaxRequest();
     });
+    
 	// Ajax요청 List 받기 함수
 	function sendAjaxRequest(){
 		// search form 데이터 받아오기
 		let form = document.getElementById('search-form');
 		let formData = new FormData(form);
+		
+		let stockInDateValue = document.getElementById('stockInDate').value;
+    	if (stockInDateValue) {
+            formData.append('stockInDate', stockInDateValue);
+            rememberedStockInDate = stockInDateValue; // 값을 기억
+        } else {
+            formData.append('stockInDate', ''); // 날짜가 없으면 빈 문자열을 서버에 전송
+            rememberedStockInDate = ''; // 값을 초기화
+        }
 		
 		let xhr = new XMLHttpRequest();
 		xhr.open('POST', 'http://localhost:8080/Inventory/branch/search', true);
@@ -97,6 +110,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	                <th onclick="updateOrderBy('outDate')">최근 출고일
 	                    ${orderBy.includes('outDate asc') ? '▲' : orderBy.includes('outDate desc') ? '▼' : ''}
 	                </th>
+	                <th>
+	                	입고 총합
+	                	<input type="date" id="stockInDate" />
+	                </th>
 				</tr>
 			</thead>
 			<tbody id="table-body">
@@ -116,11 +133,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${numberFormatter.format(item.inventory * item.price)}</td>
         		<td>${item.inDate }</td>
         		<td>${item.outDate }</td>
+        		<td>${item.sumInInventory}</td>
             `;
 
             tbody.appendChild(row);
 		});
+	
+		document.getElementById('stockInDate').value = rememberedStockInDate;
+	
+		document.getElementById('stockInDate').addEventListener('change', function() {
+		sendAjaxRequest();
+		});
+	
 	}
+	
 })
 
 function getKindCode(kindCode) {
