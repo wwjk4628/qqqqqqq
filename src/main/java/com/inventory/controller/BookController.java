@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.inventory.repositories.vo.BookVo;
 import com.inventory.services.BookService;
 
+import jakarta.servlet.http.HttpSession;
+
 @RequestMapping("/admin/book")
 @Controller
 public class BookController {
@@ -24,9 +26,16 @@ public class BookController {
 	BookService bookService;
 
 	@RequestMapping("/list")
-	public String booklist(Model model) {
+	public String booklist(Model model, HttpSession session) {
 //		book_list 테이블에서 전체 데이터를 뽑아와 list에 저장
 		List<BookVo> list = bookService.getbookList();
+		
+		Boolean addList = (Boolean)session.getAttribute("addList");
+		
+		if (addList != null && addList) {
+			model.addAttribute("addList", true);
+			session.removeAttribute("addList");
+		}
 //		모델에 책 목록을 추가하여 JSP에 전달
 		model.addAttribute("list", list);
 		return "admins/book_update";
@@ -41,7 +50,7 @@ public class BookController {
 
 //	본사 교재 리스트에서 교재 추가 기능
 	@PostMapping("/insert")
-	public String insertBook(@ModelAttribute BookVo vo, Model model) {
+	public String insertBook(@ModelAttribute BookVo vo, Model model, HttpSession session) {
 		List<BookVo> list = bookService.getbookList();
 		model.addAttribute("list", list);
 
@@ -51,10 +60,12 @@ public class BookController {
 		if (isDuplicate) {
 			model.addAttribute("error", "교재ID 중복");
 			return "admins/book_update";
-		}
-
+		} 
 		// 중복되지 않으면 책 정보 추가
-		bookService.writebook(vo);
+		boolean success = (boolean)bookService.writebook(vo);
+		if (success) {
+			session.setAttribute("addList", true);
+		}
 		return "redirect:/admin/book/list";
 	}
 
