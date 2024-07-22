@@ -83,5 +83,12 @@
 		group by book_code
 	</select>
 	
-	
+	<select id="outInventorySum" parameterType = "map" resultType = "BookInventoryVo">
+		select book_code as bookCode, sum(quantity) as inventory from stock_out so join out_detail od on so.out_id = od.out_id 
+		where branch_id = #{branchId}
+		<if test = "stockInDate != null and stockInDate.trim() != ''">
+			and out_date > #{stockInDate}
+		</if>
+		group by book_code
+	</select>
 </mapper>

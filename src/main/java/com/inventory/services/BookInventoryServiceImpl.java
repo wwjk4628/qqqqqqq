@@ -55,6 +55,15 @@ public class BookInventoryServiceImpl implements BookInventoryService {
 	            inventory.setSumInInventory(sumQuantity);
 	        }
 	    }
+		
+		List<BookInventoryVo> sumStockOutInventory = bookInventoryDao.sumStockOut(params);
+		sumStockMap = sumStockOutInventory.stream().collect(Collectors.toMap(BookInventoryVo::getBookCode, BookInventoryVo::getInventory));
+		for (BookInventoryVo inventory : inventoryList) {
+	        Integer sumQuantity = sumStockMap.get(inventory.getBookCode());
+	        if (sumQuantity != null) {
+	            inventory.setSumOutInventory(sumQuantity);
+	        }
+	    }
 		return inventoryList;
 	}
 

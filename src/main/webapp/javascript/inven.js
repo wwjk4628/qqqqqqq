@@ -114,6 +114,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	                	입고 총합
 	                	<input type="date" id="stockInDate" />
 	                </th>
+	                <th>출고 총합</th>
+	                <th>예상 재고</th>
 				</tr>
 			</thead>
 			<tbody id="table-body">
@@ -129,11 +131,13 @@ document.addEventListener('DOMContentLoaded', function() {
 				<td>${getKindCode(item.kindCode)}</td>
 				<td>${item.bookName}</td>
 				<td>${numberFormatter.format(item.price)}</td>
-                <td>${item.inventory}</td>
+                <td>${numberFormatter.format(item.inventory)}</td>
                 <td>${numberFormatter.format(item.inventory * item.price)}</td>
         		<td>${item.inDate }</td>
         		<td>${item.outDate }</td>
-        		<td>${item.sumInInventory}</td>
+        		<td>${numberFormatter.format(item.sumInInventory)}</td>
+        		<td>${numberFormatter.format(item.sumOutInventory)}</td>
+        		<td>${numberFormatter.format(item.sumInInventory - item.sumOutInventory)}</td>
             `;
 
             tbody.appendChild(row);
