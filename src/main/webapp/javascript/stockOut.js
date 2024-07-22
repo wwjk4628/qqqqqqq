@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             updateSearchResults(data);
             initializeLocalStorage(data);  // 초기 데이터로 로컬 스토리지 설정
+            loadLocalStorage();
         })
         .catch(error => console.error('Error:', error));
 
@@ -52,7 +53,7 @@ function initializeLocalStorage(data) {
 	// bookCode 기반의 빈 배열 만들어놓기
     data.forEach(item => {
         const bookCode = item.bookCode;
-        quantities[bookCode] = quantities[bookCode] || 0;
+        quantities[bookCode] = null;
         comments[bookCode] = comments[bookCode] || '';
         bookNames[bookCode] = item.bookName;
     });
@@ -104,6 +105,9 @@ function handleQuantityChange(input) {
     if (!textarea) return;
 
     const quantity = parseInt(input.value, 10) || 0;
+    if (quantity <= 0){
+		textarea.value = '';
+	}
     textarea.disabled = quantity <= 0;
     saveLocalStorage();
 }
@@ -112,6 +116,7 @@ function handleQuantityChange(input) {
 function validateAndHandleQuantity(input, max) {
     validateQuantity(input, max);
     handleQuantityChange(input);
+    addGije();
 }
 
 // localStorage에 입력값 저장하는 함수
@@ -135,6 +140,7 @@ function saveLocalStorage() {
 
     localStorage.setItem('quantities', JSON.stringify(quantities));
     localStorage.setItem('comments', JSON.stringify(comments));
+    addGije();
 }
 
 // 로드 함수
@@ -207,6 +213,64 @@ function showConfirmationModal() {
 
     // 모달을 보여줍니다.
     modal.style.display = 'block';
+}
+
+function addGije() {
+    const gije = document.getElementById('gije');
+    gije.innerHTML = ''; // 기존 내용을 지움
+
+    // LocalStorage에서 수량과 코멘트를 불러옴
+    const quantities = JSON.parse(localStorage.getItem('quantities') || '{}');
+    const comments = JSON.parse(localStorage.getItem('comments') || '{}');
+    const bookNames = JSON.parse(localStorage.getItem('bookNames') || '{}');
+
+    // LocalStorage의 모든 항목 불러오기
+    Object.keys(quantities).forEach(bookCode => {
+        const quantity = quantities[bookCode];
+        const comment = comments[bookCode] || '';
+        const bookName = bookNames[bookCode] || '정보 없음';
+        
+        // 수량이 0보다 큰 경우만 모달에 추가
+        if (quantity > 0) {
+            gije.innerHTML += `
+                <div>
+                    <p><strong>교재명:</strong> ${bookName}</p>
+                    <p><strong>수량:</strong> ${quantity}</p>
+                    <p><strong>코멘트:</strong> ${comment}</p>
+                    <button type="button" onclick="deleteGije('${bookCode}')" class="delete">삭제</button>
+                    <hr>
+                </div>
+            `;
+        }
+    });
+}
+
+function deleteGije(bookCode) {
+    const quantities = JSON.parse(localStorage.getItem('quantities') || '{}');
+    const comments = JSON.parse(localStorage.getItem('comments') || '{}');
+    
+    if (comments.hasOwnProperty(bookCode)){
+		comments[bookCode] = '';
+		localStorage.setItem('comments', JSON.stringify(comments));
+		
+		const textarea = document.querySelector(`textarea[data-book-code="${bookCode}"]`);
+        if(textarea){
+			textarea.value = '';
+		}
+	}
+    
+    if (quantities.hasOwnProperty(bookCode)) {
+        quantities[bookCode] = null; 
+        localStorage.setItem('quantities', JSON.stringify(quantities));
+        addGije();  // 모달 업데이트
+        
+        const input = document.querySelector(`input[data-book-code="${bookCode}"]`);
+        if (input) {
+            input.value = null;
+        }
+        
+    }
+    loadLocalStorage();
 }
 
 // 폼 제출 함수

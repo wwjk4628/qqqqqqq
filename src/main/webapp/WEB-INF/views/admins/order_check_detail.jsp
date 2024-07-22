@@ -46,8 +46,13 @@
 				</tr>
 			</c:forEach>
 		</table>
-		<p><a href="<c:url value='/admin/ordercheck/refuse/${id}'/>" class="delete">반려</a></p>
-		<p><a href="<c:url value='/admin/ordercheck/confirm/${id}'/>" class="update">승인</a>	</p>
+		<c:choose>
+			<c:when test="${checked eq 0}">
+				<p><a href="<c:url value='/admin/ordercheck/refuse/${id}'/>" class="delete">반려</a></p>
+				<p><a href="<c:url value='/admin/ordercheck/confirm/${id}'/>" class="update">승인</a>	</p>
+			</c:when>
+		</c:choose>
+		
 	</div>
 	<%@ include file="/WEB-INF/views/admin_includes/footer.jsp"%>
 </body>

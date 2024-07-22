@@ -72,6 +72,9 @@
     <url-pattern>/*</url-pattern>
 </filter-mapping>
   
+  <session-config>
+  	<session-timeout>30</session-timeout><!-- 세션 유지 시간 30분 -->
+  </session-config>
   
   <!-- 공통 에러 페이지: Spring 앱 바깥에서 일어난 예외 -->
 

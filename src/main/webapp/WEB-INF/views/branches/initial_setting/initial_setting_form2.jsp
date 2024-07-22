@@ -25,6 +25,8 @@
 		<input type="hidden" id="orderBy" name="orderBy" value="${param.orderBy}">
 		<input type="submit" value="검색">
 		<button type="button" onclick="resetKeyword()" class="add">초기화</button>
+		<button type="button" onclick="showConfirmationModal()" class="update">확정</button>
+		<div id="gije"></div>
 	</form>
 	
     <table id="table">    

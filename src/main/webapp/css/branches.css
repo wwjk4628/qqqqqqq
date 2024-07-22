@@ -367,7 +367,7 @@ footer {
     background-color: rgba(0,0,0,0.4);
 }
 
-.modal-content {
+.modal-content {	/*모달 창에 대한 스타일*/
 	background-color: #fefefe;
 	margin: 15% auto;
     padding: 20px;
@@ -380,7 +380,7 @@ footer {
     max-height: 50vh;
     overflow-y: auto; /* 세로 스크롤 */
 }
-.modal-body {
+.modal-body {	/*모달 내용에 대한 스타일*/
     max-height: calc(80vh - 100px); /* 최대 높이 (모달 창 높이에서 버튼 높이 차감) */
     overflow-y: auto; /* 세로 스크롤 */
     margin-bottom: 20px; /* 버튼과의 거리 */
@@ -396,4 +396,21 @@ footer {
 	color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+#search-form {
+        position: fixed;
+        top: 10%; /* 페이지 상단에서의 위치 */
+        right: 10px; /* 페이지 오른쪽에서의 위치 */
+        background-color: white; /* 배경색 (투명도 조정 가능) */
+        padding: 10px; /* 패딩 */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* 그림자 */
+        z-index: 1000; /* 다른 요소들 위에 표시되도록 */
+        max-height: 90%;
+		max-width: 40%;
+}
+    
+#gije{
+	max-height: calc(80vh - 50px);
+	overflow-y: auto; /* 세로 스크롤 */
 }
