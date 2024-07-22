@@ -66,10 +66,17 @@ public class OrderCheckController {
 	}
 
 	@RequestMapping("/detail/{id}")
-	public String orderCheckdetail(@PathVariable("id") String id, HttpSession session) {
+	public String orderCheckdetail(@PathVariable("id") String id, HttpSession session, Model model) {
 
 		List<OrderVo> list = OrderCheckService.getOrderDetail(id);
+		
+		String checked = null;
+		for(OrderVo vo:list) {
+			checked = vo.getChecked();
+		}
+		
 		session.setAttribute("list", list);
+		model.addAttribute("checked", checked);
 
 		return "admins/order_check_detail";
 	}
