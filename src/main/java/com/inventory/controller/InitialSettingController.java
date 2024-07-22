@@ -52,20 +52,23 @@ public class InitialSettingController {
     @ResponseBody
     public List<BookInventoryVo> getListForform(HttpSession session) {
         UserVo vo = (UserVo) session.getAttribute("authUser");
-        return bookInventoryService.getList(vo.getBranchId());
+        Map <String, Object> params = new HashMap<>();
+        params.put("branchId", vo.getBranchId());
+        params.put("keyword", "");
+        params.put("orderBy", "kindcode desc, book_name asc");
+        return bookInventoryService.invenList(params);
     }
 	
 	@RequestMapping(value = "/search", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public List<BookInventoryVo> search(HttpSession session, @RequestParam("keyword") String keyword,
-    		@RequestParam(value = "orderBy", defaultValue = "CASE WHEN inventory > 0 THEN 1 ELSE 2 END ASC, kindcode ASC") String orderBy) {
+    		@RequestParam(value = "orderBy", defaultValue = "kindcode desc, book_name asc") String orderBy) {
         UserVo vo = (UserVo) session.getAttribute("authUser");
         
         Map <String, Object> params = new HashMap<>();
 		params.put("branchId", vo.getBranchId());
 	    params.put("keyword", keyword != null ? keyword : "");
 	    params.put("orderBy", orderBy != null ? orderBy.trim() : null);
-        
         return bookInventoryService.invenList(params);
     }
 	
