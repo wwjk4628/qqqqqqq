@@ -39,29 +39,13 @@ public class InitialSettingController {
 	StockService stockService;
 	@Autowired
 	OrderCheckService orderCheckService;
-	
-	
-//	@RequestMapping("/setting")
-//	public String moveToInitialSettingPage(HttpSession session) {
-//		
-//		//	교재 선택 리스트 출력
-//		UserVo vo = (UserVo)session.getAttribute("authUser");
-//		List<BookInventoryVo> list = bookInventoryService.getList(vo.getBranchId());
-//		session.setAttribute("authUser", vo);
-//		session.setAttribute("initialList", list);
-//		
-//		//	카트 리스트 표시
-//		List<OrderVo> cartList = (List<OrderVo>) session.getAttribute("initialCart");
-//		session.setAttribute("initialCart", cartList);
-//		
-//		return "branches/initial_setting/initial_setting_form";
-//	}
+
 	
 	@RequestMapping("/setting/form")
     public String moveToStockOutFrom(HttpSession session) {
     	UserVo vo = (UserVo)session.getAttribute("authUser");
 		session.setAttribute("authUser", vo);
-		return "branches/initial_setting/initial_setting_form2";
+		return "branches/initial_setting/initial_setting_form";
     }
 	
 	@RequestMapping(value = "/getListForform", method = RequestMethod.GET, produces = "application/json")
