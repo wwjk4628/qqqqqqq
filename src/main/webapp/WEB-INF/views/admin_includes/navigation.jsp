@@ -36,15 +36,10 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <span class="navbar-text text-white">
-                        <c:out value="${sessionScope.username}"/> 님
+                        <a href="<c:url value='/user/mypage'/>" class="text-white"><c:out value="${sessionScope.authUser.name}"/> 님</a>
                     </span>
-                </li>
-                <li class="nav-item">
-                    <form action="<c:url value='/logout' />" method="post">
-                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                        <button type="submit" class="nav-link btn btn-link" style="display: inline; padding: 0;">로그아웃</button>
-                    </form>
-                </li>
+                <li class="nav-item"><a class="nav-link"
+                    href="<c:url value='/logout' />">로그아웃</a></li>
             </ul>
         </div>
     </nav>
