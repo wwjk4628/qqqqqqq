@@ -77,35 +77,6 @@
 
     <%@ include file="/WEB-INF/views/admin_includes/footer.jsp"%>
     <script src="<c:url value='/javascript/bookupdate.js'/>"></script>
-    <script>
-        function downloadCSV() {
-            var csv = [];
-            var rows = document.querySelectorAll("table tr");
-            
-            for (var i = 0; i < rows.length; i++) {
-                var row = [], cols = rows[i].querySelectorAll("td, th");
-                
-                for (var j = 0; j < cols.length; j++) {
-                    var data = cols[j].innerText.replace(/"/g, '""');
-                    row.push('"' + data + '"');
-                }
-                
-                csv.push(row.join(","));
-            }
-            
-            var csvContent = csv.join("\n");
-            var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 
-            var link = document.createElement("a");
-            if (link.download !== undefined) {
-                var url = URL.createObjectURL(blob);
-                link.setAttribute("href", url);
-                link.setAttribute("download", "book_list.csv");
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-        }
-    </script>
 </body>
 </html>
