@@ -14,6 +14,7 @@ public class BookInventoryVo {
 	private int price;
 	private String kindCode;
 	
+	
 	public BookInventoryVo() {
 		
 	}

@@ -23,10 +23,13 @@ public class BookInventoryDaoImpl implements BookInventoryDao {
 	}
 
 	@Override
-	public List<BookInventoryVo> search(String id, String keyword) {
+	public List<BookInventoryVo> search(String id, String keyword, String key, String ordering) {
 		Map <String, String> map = new HashMap<>();
+		System.err.println("dao" + key + ordering);
 		map.put("id", id);
 		map.put("keyword", keyword);
+		map.put("key", key);
+		map.put("ordering", ordering);
 		List <BookInventoryVo> list = sqlSession.selectList("bookInventory.searchInventory", map);
 		return list;
 	}
