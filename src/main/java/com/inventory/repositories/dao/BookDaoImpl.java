@@ -1,6 +1,7 @@
 package com.inventory.repositories.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,14 @@ public class BookDaoImpl implements BookDao{
 		return vo;
 	}
 
-	
-	
-	
+	@Override
+	public List<String> branchIdList() {
+		List <String> branchIdList = sqlSession.selectList("book.getBranchIdList");
+		return branchIdList;
+	}
+
+	@Override
+	public int insertInventory(Map<String, String> map) {
+		return sqlSession.insert("bookInventory.initialization", map);
+	}
 }

@@ -65,6 +65,7 @@ public class BookController {
 		boolean success = (boolean)bookService.writebook(vo);
 		if (success) {
 			session.setAttribute("addList", true);
+			bookService.insertInventory(vo.getBookCode());
 		}
 		return "redirect:/admin/book/list";
 	}
