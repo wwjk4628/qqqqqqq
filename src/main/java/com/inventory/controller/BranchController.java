@@ -26,29 +26,29 @@ public class BranchController {
 	@Autowired
 	private BookInventoryService bookInvenService;
 	
-	@RequestMapping({"/inventory", "/home"})
-	public String branchHome(HttpSession session, RedirectAttributes redirectAttributes,
-			@RequestParam(value = "keyword", required = false) String keyword,
-			@RequestParam(value="check", required = false) String check,
-			@RequestParam(value = "orderBy", defaultValue = "kindcode desc, book_name asc") String orderBy,
-			Model model) {
-		
-		UserVo authUser = (UserVo) session.getAttribute("authUser");
-		
-		Map <String, Object> params = new HashMap<>();
-		params.put("branchId", authUser.getBranchId());
-	    params.put("keyword", keyword != null ? keyword : "");
-	    params.put("check", check);
-	    params.put("orderBy", orderBy != null ? orderBy.trim() : null);
-
-		model.addAttribute("list", bookInvenService.invenList(params));
-		
-//		session.setAttribute("authUser", authUser);
-		
-		return "branches/branch_home";
-	}
+//	@RequestMapping({"/inventory", "/home"})
+//	public String branchHome(HttpSession session, RedirectAttributes redirectAttributes,
+//			@RequestParam(value = "keyword", required = false) String keyword,
+//			@RequestParam(value="check", required = false) String check,
+//			@RequestParam(value = "orderBy", defaultValue = "kindcode desc, book_name asc") String orderBy,
+//			Model model) {
+//		
+//		UserVo authUser = (UserVo) session.getAttribute("authUser");
+//		
+//		Map <String, Object> params = new HashMap<>();
+//		params.put("branchId", authUser.getBranchId());
+//	    params.put("keyword", keyword != null ? keyword : "");
+//	    params.put("check", check);
+//	    params.put("orderBy", orderBy != null ? orderBy.trim() : null);
+//
+//		model.addAttribute("list", bookInvenService.invenList(params));
+//		
+////		session.setAttribute("authUser", authUser);
+//		
+//		return "branches/branch_home";
+//	}
 	
-	@RequestMapping("/thenewneodynamicinventory")
+	@RequestMapping({"/inventory", "/home"})
 	public String newHome() {
 		return"branches/branch_home_ajax";
 	}
