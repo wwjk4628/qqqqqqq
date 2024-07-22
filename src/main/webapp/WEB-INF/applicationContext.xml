@@ -28,11 +28,24 @@
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
     </context:component-scan>
     
+    <!-- EncryptedPropertyLoader Bean 등록 -->
+    <bean id="encryptedPropertyLoader" class="com.inventory.security.EncryptedPropertyLoader" />
+
     <!-- Oracle DataSource -->
     <bean id="oracleDatasource" class="oracle.jdbc.pool.OracleDataSource">
         <property name="URL" value="jdbc:oracle:thin:@192.168.0.64:1521:xe" />
-        <property name="user" value="team2project" ></property>
-        <property name="password" value="team2project" />
+        <property name="user" value="team2project" />
+        <property name="password">
+            <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+                <property name="targetObject" ref="encryptedPropertyLoader" />
+                <property name="targetMethod" value="decrypt" />
+                <property name="arguments">
+                    <list>
+                        <value>Yqf9WJSmBhbuwoHPZIh1/A==</value>
+                    </list>
+                </property>
+            </bean>
+        </property>
         <property name="implicitCachingEnabled" value="true" />
     </bean>
     
@@ -52,5 +65,33 @@
         <property name="dataSource" ref="oracleDatasource" />
     </bean>
     
+    <!-- JavaMailSender 설정 -->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.gmail.com" />
+        <property name="port" value="587" />
+        <property name="username" value="ktw1398@gmail.com" />
+        <property name="password">
+            <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+                <property name="targetObject" ref="encryptedPropertyLoader" />
+                <property name="targetMethod" value="decrypt" />
+                <property name="arguments">
+                    <list>
+                        <value>C8G8d/6gXjrpnNYKX0H6x9LzB1Zyaup3kwhVS//mfiY=</value>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.smtp.timeout">5000</prop>
+                <prop key="mail.smtp.connectiontimeout">5000</prop>
+                <prop key="mail.smtp.writetimeout">5000</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <!-- 트랜잭션 어노테이션 활성화 -->
     <tx:annotation-driven transaction-manager="transactionManager" />
 </beans>

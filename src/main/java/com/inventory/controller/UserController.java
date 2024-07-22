@@ -3,8 +3,10 @@ package com.inventory.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.inventory.repositories.vo.UserVo;
 import com.inventory.services.UserService;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @RequestMapping("/user")
@@ -87,6 +90,56 @@ public class UserController {
 		return "users/loginform";
 	}
 
+	@GetMapping("/mypage")
+	public String mypage(Authentication authentication, Model model) {
+		String username = authentication.getName();
+		UserVo vo = userService.getUserProfile(username);
+		model.addAttribute("user", vo);
+		return "users/mypage";
+	}
+	
+	@GetMapping("/changePassword")
+    public String changePasswordForm() {
+        return "users/changePassword";
+    }
+	
+	@PostMapping("/changePassword")
+	public String changePassword(@RequestParam("currentPassword") String currentPassword,
+	                             @RequestParam("newPassword") String newPassword,
+	                             HttpSession session) {
+	    UserVo userVo = (UserVo) session.getAttribute("authUser");
+	    boolean success = userService.changePassword(userVo.getName(), currentPassword, newPassword);
+
+	    if (success) {
+	        return "redirect:/user/changePassword?status=success";
+	    } else {
+	        return "redirect:/user/changePassword?status=failure";
+	    }
+	}
+	
+    @GetMapping("/forgotPassword")
+    public String forgotPasswordForm() {
+        return "users/forgotPassword";
+    }
+
+    // 비밀번호 재설정 요청 처리
+    @PostMapping("/forgotPassword")
+    public String forgotPassword(@RequestParam("username") String username, Model model) {
+        UserVo userVo = userService.getUserByNameForLogin(username);
+
+        if (userVo == null || userVo.getEmail() == null || userVo.getEmail().isEmpty()) {
+            model.addAttribute("message", "존재하지 않거나 이메일이 등록되지 않은 사용자 아이디입니다.");
+            return "users/forgotPassword";
+        }
+
+        String tempPassword = UUID.randomUUID().toString().substring(0, 8);
+        String encodedPassword = passwordEncoder.encode(tempPassword);
+        userService.updatePassword(username, encodedPassword);
+        userService.sendEmail(userVo.getEmail(), "임시 비밀번호 발급", "임시 비밀번호: " + tempPassword);
+
+        model.addAttribute("status", "success");
+        return "redirect:/user/forgotPassword?status=success";
+    }
 	
 //	@PostMapping("/login")
 //	public String loginAction(@RequestParam(value="name", required=false, defaultValue="") String name,

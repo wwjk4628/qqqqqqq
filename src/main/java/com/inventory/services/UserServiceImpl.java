@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserDao userDao;
 	
+	@Autowired
+    private JavaMailSender mailSender;
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
@@ -93,5 +98,57 @@ public class UserServiceImpl implements UserService {
 	public List<UserVo> getAllBranches() {
 		return userDao.getAllBranches();
 	}
+
+	@Override
+	public UserVo getUserProfile(String name) {
+		return userDao.selectUserForProfile(name);
+	}
+	
+	@Override
+	public boolean changePassword(String name, String currentPassword, String newPassword) {
+	    UserVo user = userDao.findByUsernameForLogin(name);
+
+	    if (user == null || !passwordEncoder.matches(currentPassword, user.getPassword())) {
+	        return false;
+	    }
+
+	    String encodedNewPassword = passwordEncoder.encode(newPassword);
+	    userDao.updatePassword(name, encodedNewPassword);
+	    return true;
+	}
+
+    @Override
+    public void updatePassword(String username, String password) {
+        userDao.updatePassword(username, password);
+    }
+
+    @Override
+    public void sendEmail(String to, String subject, String text) {
+    	 
+    	if (to == null || to.isEmpty()) {
+    	    throw new IllegalArgumentException("Recipient email address must not be null or empty");
+    	}
+        SimpleMailMessage message = new SimpleMailMessage();        
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        mailSender.send(message);
+    }
+    
+    @Override
+    public void resetPassword(String username) {
+        UserVo userVo = userDao.findByUsernameForLogin(username);
+        if (userVo == null) {
+            throw new RuntimeException("User not found");
+        }
+        String tempPassword = UUID.randomUUID().toString().substring(0, 8);
+        updatePassword(username, tempPassword);
+        if (userVo.getEmail() != null && !userVo.getEmail().isEmpty()) {
+            sendEmail(userVo.getEmail(), "Temporary Password", "Your new temporary password is: " + tempPassword);
+        } else {
+            throw new RuntimeException("Email address is missing for user: " + username);
+        }
+    }
+
 	
 }

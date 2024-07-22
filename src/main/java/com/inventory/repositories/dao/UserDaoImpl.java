@@ -109,4 +109,18 @@ public class UserDaoImpl implements UserDao{
 		List <UserVo> list = sqlSession.selectList("users.selectBranchList");
 		return list;
 	}
+
+	@Override
+	public UserVo selectUserForProfile(String name) {
+		return sqlSession.selectOne("users.selectUserForProfile", name);
+	}
+
+	@Override
+	public void updatePassword(String name, String newPassword) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("name", name);
+		params.put("newPassword", newPassword);
+		sqlSession.update("users.updatePassword",params);
+		
+	}
 }
