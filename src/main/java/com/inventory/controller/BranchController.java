@@ -28,7 +28,8 @@ public class BranchController {
 	public String branchHome(HttpSession session, RedirectAttributes redirectAttributes,
 			@RequestParam(value = "keyword", required = false) String keyword,
 			@RequestParam(value="check", required = false) String check,
-			@RequestParam(value = "orderBy", defaultValue = "inventory DESC") String orderBy, Model model) {
+			@RequestParam(value = "orderBy", defaultValue = "CASE WHEN inventory > 0 THEN 1 ELSE 2 END ASC, kindcode ASC") String orderBy,
+			Model model) {
 		
 		UserVo authUser = (UserVo) session.getAttribute("authUser");
 //		if (!("1").equals(authUser.getAuthCode())) {

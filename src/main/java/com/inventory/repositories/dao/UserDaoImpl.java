@@ -103,4 +103,10 @@ public class UserDaoImpl implements UserDao{
 		//	관리자 계정으로 수정하기 -> 1을 2로 바꾸는 장치
 		return sqlSession.update("users.confirmUserAcount", confirmMap);
 	}
+
+	@Override
+	public List<UserVo> getAllBranches() {
+		List <UserVo> list = sqlSession.selectList("users.selectBranchList");
+		return list;
+	}
 }

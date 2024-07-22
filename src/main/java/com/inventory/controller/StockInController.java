@@ -50,7 +50,7 @@ public class StockInController {
 		
 		for (StockVo vo :list) {
 			StockVo insertVo = new StockVo (vo.getBranchId(), vo.getBookCode(), vo.getQuantity());
-			stockService.confirnStockIn(insertVo);
+			stockService.confirmStockIn(insertVo);
 		}
 		
 		return "redirect:/branch/inventory";

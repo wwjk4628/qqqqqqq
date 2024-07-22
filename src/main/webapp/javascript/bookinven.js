@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         orderBy = orderByArray.join(', ');
         document.getElementById('orderBy').value = orderBy;
-        console.log(orderBy);
         document.getElementById('search-form').submit();
     }
     

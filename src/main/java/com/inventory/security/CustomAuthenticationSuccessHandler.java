@@ -48,12 +48,17 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
         boolean isUser = authentication.getAuthorities().stream()
             .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_USER"));
+        boolean isGuest = authentication.getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_GUEST"));
 
         if (isAdmin) {
             return "/admin/home";
         } else if (isUser) {
             return "/branch/inventory";
-        } else {
+        } else if (isGuest) {
+        	return "/user/waiting";
+        }
+        else {
             return "/users/authcode";
         }
     }

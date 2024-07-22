@@ -68,7 +68,6 @@ pre {
 <body>
 	<div class="container">
 		<h1>오류 발생</h1>
-		<p class="error-message">다음과 같은 오류가 발생했습니다:</p>
 		<p class="error-message">${errorMessage}</p>
 
 

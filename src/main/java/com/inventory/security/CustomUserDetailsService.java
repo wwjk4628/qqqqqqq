@@ -45,6 +45,8 @@ public class CustomUserDetailsService implements UserDetailsService {
             role = "ADMIN";
         } else if ("1".equals(userVo.getAuthCode())) {
             role = "USER";
+        } else if ("0".equals(userVo.getAuthCode())) {
+        	role = "GUEST";
         } else {
             throw new BadCredentialsException("No valid role assigned to this user");
         }
