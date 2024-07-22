@@ -140,3 +140,5 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,eclipse,java,visualstudiocode
 /target/
+# Ignore personal Eclipse settings
+.settings/org.eclipse.core.resources.prefs
