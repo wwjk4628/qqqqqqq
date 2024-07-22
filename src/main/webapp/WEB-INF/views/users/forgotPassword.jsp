@@ -12,6 +12,7 @@
             const params = new URLSearchParams(window.location.search);
             if (params.get('status') === 'success') {
                 alert('임시 비밀번호가 이메일로 전송되었습니다.');
+                window.location.href = '<c:url value="/user/login"/>';
             }
         };
     </script>

@@ -10,17 +10,8 @@
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/users.css'/>">
     <script src="<c:url value="/javascript/users.js"/>"></script>
     <style>
-        .container {
-            position: relative;
-            width: 300px; /* Adjust the width as needed */
-            margin: 0 auto;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background: white;
-        }
         .container .back-button {
-            position: absolute;
+            position: relative;
             top: 10px;
             left: 10px;
             background-color: transparent;

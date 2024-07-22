@@ -24,6 +24,7 @@
             const params = new URLSearchParams(window.location.search);
             if (params.get('status') === 'success') {
                 alert('비밀번호 변경 성공');
+                window.location.href = '<c:url value="/user/mypage"/>';
             } else if (params.get('status') === 'failure') {
                 alert('비밀번호 변경 실패');
             }
