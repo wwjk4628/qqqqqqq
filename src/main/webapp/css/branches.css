@@ -181,6 +181,19 @@ input[type="text"], input[type="submit"], input[type="checkbox"] {
 	background-color: #c62828; /* 다크 레드 */
 }
 
+.deleteAll {
+	background-color: #f44336; /* 빨간색 */
+	color: white;
+	padding: 5px 10px;
+	text-decoration: none;
+	border-radius: 5px;
+	display: inline-block; /* 버튼처럼 보이게 하기 위한 추가 */
+}
+
+.deleteAll:hover {
+	background-color: #c62828; /* 다크 레드 */
+}
+
 .update {
 	background-color: #008CBA; /* 파란색 */
 	color: white;
