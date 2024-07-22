@@ -8,7 +8,7 @@ import com.inventory.repositories.vo.BookInventoryVo;
 public interface BookInventoryService {
 
 	public List <BookInventoryVo> getList (String id);
-	public List <BookInventoryVo> search (String id, String keyword);
+	public List <BookInventoryVo> search (String id, String keyword, String key, String ordering);
 	
 	public int getInventory(BookInventoryVo vo);
 	

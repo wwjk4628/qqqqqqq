@@ -21,8 +21,8 @@ public class BookInventoryServiceImpl implements BookInventoryService {
 	}
 
 	@Override
-	public List<BookInventoryVo> search(String id, String keyword) {
-		return bookInventoryDao.search(id, keyword);
+	public List<BookInventoryVo> search(String id, String keyword, String key, String ordering) {
+		return bookInventoryDao.search(id, keyword, key, ordering);
 	}
 
 	@Override
