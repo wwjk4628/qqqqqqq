@@ -24,7 +24,8 @@
 		resultType="BookVo">
 		SELECT book_code as bookCode, book_name as bookName, price, kindcode
 		FROM book_list
-		WHERE book_name LIKE '%' || #{book_name} || '%'
+		WHERE UPPER(book_name) LIKE '%' || UPPER(#{book_name}) || '%'
+
 
 
 	</select>
