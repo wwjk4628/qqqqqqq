@@ -58,7 +58,7 @@ public class InitialSettingController {
 //	}
 	
 	@RequestMapping("/setting/form")
-    public String moveToStockOutFrom(HttpSession session, Model model) {
+    public String moveToStockOutFrom(HttpSession session) {
     	UserVo vo = (UserVo)session.getAttribute("authUser");
 		session.setAttribute("authUser", vo);
 		return "branches/initial_setting/initial_setting_form2";
