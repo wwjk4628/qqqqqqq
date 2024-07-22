@@ -72,6 +72,7 @@
   
   
   <!-- 공통 에러 페이지: Spring 앱 바깥에서 일어난 예외 -->
+
   
 <!-- 400 오류 페이지 설정 -->
     <error-page>
@@ -126,5 +127,5 @@
         <exception-type>java.lang.ArrayIndexOutOfBoundsException</exception-type>
         <location>/error/500</location>
     </error-page>
-  
+
 </web-app>

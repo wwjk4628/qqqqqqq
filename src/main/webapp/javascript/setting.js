@@ -26,10 +26,6 @@ function addToCart() {
 		alert("최대 발주 수량은 100,000개입니다. 다시 입력해주세요.");
 		return;
 	}
-
-	// 장바구니 추가 알림
-	alert("장바구니에 상품이 추가되었습니다.");
-
 	// 폼 제출
 	var form = document.getElementById("addToCartForm");
 	form.submit();
@@ -130,8 +126,6 @@ function addToCart2() {
 		return;
 	}
 
-	// 장바구니 추가 알림
-	alert("장바구니에 상품이 추가되었습니다.");
 
 	form.submit();
 }

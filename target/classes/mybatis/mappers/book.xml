@@ -25,8 +25,6 @@
 		SELECT book_code as bookCode, book_name as bookName, price, kindcode
 		FROM book_list
 		WHERE upper(book_name) LIKE '%' || upper(trim(#{book_name})) || '%'
-
-
 	</select>
 
 	<select id="getData" parameterType="String" resultType="BookVo">
