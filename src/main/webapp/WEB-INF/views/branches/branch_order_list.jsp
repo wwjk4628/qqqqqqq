@@ -14,9 +14,9 @@ $(document).ready(function() {
     var success = '${success}'; // 서버에서 전달된 success 변수
 
     if (success === 'true') {
-        alert('Order has been placed successfully!');
+        alert('발주 성공!');
     } else if (success === 'false') {
-        alert('Order could not be placed. Please try again.');
+        alert('발주 실패!');
     }
 
     // 나머지 코드

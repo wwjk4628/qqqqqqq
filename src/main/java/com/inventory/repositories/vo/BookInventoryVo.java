@@ -16,6 +16,7 @@ public class BookInventoryVo {
 	private int sumInInventory;
 	private int sumOutInventory;
 	
+	
 	public BookInventoryVo() {
 		
 	}

@@ -36,6 +36,15 @@ public class UserVo {
 		
 	}
 
+	public UserVo(String name, String email, String branchId, String branchName, String authCode) {
+		super();
+		this.name = name;
+		this.email = email;
+		this.branchId = branchId;
+		this.branchName = branchName;
+		this.authCode = authCode;
+	}
+
 	public UserVo(String branchId, String branchName) {
 		this.branchId = branchId;
 		this.branchName = branchName;

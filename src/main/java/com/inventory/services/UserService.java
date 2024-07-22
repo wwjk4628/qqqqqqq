@@ -29,4 +29,13 @@ public interface UserService {
 	public boolean isAuthenticated(HttpServletRequest request);
 	//	지점 리스트
 	public List<UserVo> getAllBranches();
+	//	유저 프로필
+	public UserVo getUserProfile(String name);
+	//	비밀번호 변경
+	public boolean changePassword(String name, String currentPassword, String newPassword);
+	//	임시 비밀번호로 업데이트
+	public void updatePassword(String name, String password);
+	//	임시 비밀번호 전송
+	public void sendEmail(String to, String subject, String text);
+	public void resetPassword(String username);
 }

@@ -39,8 +39,8 @@ public class BookDaoImpl implements BookDao{
 
 	@Override
 	public int update(BookVo vo) {
-		sqlSession.update("book.updateData", vo);
-		return 0;
+		
+		return sqlSession.update("book.updateData", vo);
 	}
 
 	@Override

@@ -4,49 +4,75 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="bookInventory">
-	
+
 	<!-- 기제 개선 쿼리 invenList -->
-	<select id = "dynamicInvenList" parameterType = "map" resultType="BookInventoryVo">
-			select bi.branch_id as branchId, bi.book_code as bookCode, bi.inventory as inventory, 
-				bl.book_name as bookName, bl.kindcode as kindCode, bl.price as price, outDate, inDate
-			from branch_inventory bi 
-			join book_list bl on bi.book_code = bl.book_code 
-			LEFT JOIN (
-                SELECT od.book_code, MAX(so.out_date) AS outDate
-                FROM out_detail od JOIN stock_out so ON od.out_id = so.out_id where branch_id = #{branchId}
-                GROUP BY od.book_code) so ON bi.book_code = so.book_code
-            LEFT JOIN (
-                SELECT id.book_code, MAX(si.in_date) AS inDate 
-                FROM in_detail id JOIN stock_in si ON id.in_id = si.in_id where branch_id = #{branchId}
-                GROUP BY id.book_code) si ON bi.book_code = si.book_code
-			where bi.branch_id = #{branchId}
-			<if test = "keyword != null and keyword.trim() != ''">
-				and upper(bl.book_name) like '%' || upper(trim(#{keyword})) || '%'
-			</if>
-			<if test = "check != null and check  == 'check'">
+	<select id="dynamicInvenList" parameterType="map"
+		resultType="BookInventoryVo">
+		select bi.branch_id as branchId, bi.book_code as bookCode,
+		bi.inventory as inventory,
+		bl.book_name as bookName, bl.kindcode as kindCode, bl.price as price, outDate,
+		inDate
+		from branch_inventory bi
+		join book_list bl on bi.book_code = bl.book_code
+		LEFT JOIN (
+		SELECT od.book_code, MAX(so.out_date) AS outDate
+		FROM out_detail od JOIN stock_out so ON od.out_id = so.out_id where
+		branch_id = #{branchId}
+		GROUP BY od.book_code) so ON bi.book_code = so.book_code
+		LEFT JOIN (
+		SELECT id.book_code, MAX(si.in_date) AS inDate
+		FROM in_detail id JOIN stock_in si ON id.in_id = si.in_id where branch_id
+		= #{branchId}
+		GROUP BY id.book_code) si ON bi.book_code = si.book_code
+		where bi.branch_id = #{branchId}
+		<if test="keyword != null and keyword.trim() != ''">
+			and upper(bl.book_name) like '%' || upper(trim(#{keyword})) || '%'
+		</if>
+		<if test="check != null and check  == 'check'">
 				<![CDATA[and bi.inventory <> 0]]>
-			</if>
-			<if test = "orderBy != null">
-				order by ${orderBy}
-			</if>
+		</if>
+		<if test="orderBy != null">
+			order by ${orderBy}
+		</if>
 	</select>
 
 	<!-- book inventory list -->
-	<select id="selectInventory" parameterType="string" resultType="BookInventoryVo">
-		select bi.branch_id as branchId, bi.book_code as bookCode, bl.book_name as bookName, bi.inventory as inventory, bl.price as price,  bl.kindcode as kindCode
-		from branch_inventory bi join book_list bl on bi.book_code = bl.book_code 
-		where bi.branch_id = #{id} order by inventory desc
+	<select id="selectInventory" parameterType="string"
+		resultType="BookInventoryVo">
+		select bi.branch_id as branchId, bi.book_code as bookCode,
+		bl.book_name as bookName, bi.inventory as inventory, bl.price as
+		price, bl.kindcode as kindCode
+		from branch_inventory bi join book_list
+		bl on bi.book_code = bl.book_code
+		where bi.branch_id = #{id} order by kindcode desc, bl.book_name
 
 	</select>
 
 	<!-- book inventory keyword search -->
-	<select id= "searchInventory" parameterType="map" resultType="BookInventoryVo">
-		select bi.branch_id as branchId, bi.book_code as bookCode, bl.book_name as bookName, bi.inventory as inventory, bl.price as price, bl.kindcode as kindCode
-		from branch_inventory bi join book_list bl on bi.book_code = bl.book_code 
-		where bi.branch_id = #{id} and upper(bl.book_name) like '%' || upper(trim(#{keyword})) || '%' order by inventory desc
-	</select>
+	<select id="searchInventory" parameterType="map" resultType="BookInventoryVo">
+    <![CDATA[
+    select bi.branch_id as branchId, bi.book_code as bookCode, bl.book_name as bookName, bi.inventory as inventory, bl.price as price, bl.kindcode as kindCode
+    from branch_inventory bi join book_list bl on bi.book_code = bl.book_code 
+    where bi.branch_id = #{id} and upper(bl.book_name) like '%' || upper(trim(#{keyword})) || '%'
+    ]]>
+    <if test="key != '' and ordering != ''">
+        order by ${key} ${ordering}
+    </if>
+    <if test="key != '' and ordering == ''">
+        order by ${key} desc
+    </if>
+    <if test="key == '' and ordering != ''">
+        order by kindCode ${ordering}
+    </if>
+    <if test="key == '' and ordering == ''">
+        order by kindCode desc, bl.book_name
+    </if>
+</select>
 
-	<select id="selectInventoryCheck" parameterType="string" resultType="BookInventoryVo">
+
+
+	<select id="selectInventoryCheck" parameterType="string"
+		resultType="BookInventoryVo">
 		<![CDATA[
     		select bi.branch_id as branchId, bi.book_code as bookCode, bl.book_name as bookName, bi.inventory as inventory, bl.price as price 
     		from branch_inventory bi 
@@ -56,7 +82,8 @@
     		]]>
 	</select>
 
-	<select id="searchInventoryCheck" parameterType="map" resultType="BookInventoryVo">
+	<select id="searchInventoryCheck" parameterType="map"
+		resultType="BookInventoryVo">
 		<![CDATA[
     		select bi.branch_id as branchId, bi.book_code as bookCode, bl.book_name as bookName, bi.inventory as inventory, bl.price as price
     		from branch_inventory bi 
@@ -67,11 +94,15 @@
 	</select>
 
 	<insert id="initialization" parameterType="map">
-		insert into branch_inventory (branch_id, book_code, inventory) values (#{id}, #{bookCode}, 0)
+		insert into
+		branch_inventory (branch_id, book_code, inventory) values (#{id},
+		#{bookCode}, 0)
 	</insert>
 
-	<select id="getInventory" parameterType="BookInventoryVo" resultType="int">
-		SELECT inventory FROM branch_inventory WHERE branch_id = #{branchId} and book_code = #{bookCode}
+	<select id="getInventory" parameterType="BookInventoryVo"
+		resultType="int">
+		SELECT inventory FROM branch_inventory WHERE branch_id =
+		#{branchId} and book_code = #{bookCode}
 	</select>
 	
 	<select id="inInventorySum" parameterType = "map" resultType = "BookInventoryVo">

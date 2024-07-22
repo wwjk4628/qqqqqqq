@@ -31,11 +31,24 @@ public class BookController {
 		List<BookVo> list = bookService.getbookList();
 		
 		Boolean addList = (Boolean)session.getAttribute("addList");
+		Boolean modify = (Boolean)session.getAttribute("modify");
 		
 		if (addList != null && addList) {
 			model.addAttribute("addList", true);
 			session.removeAttribute("addList");
-		}
+		} else if (addList != null && !addList) {
+	        model.addAttribute("error", "교재ID 중복");
+	        session.removeAttribute("addList");
+	    }
+		
+		if (modify != null && modify) {
+			model.addAttribute("modify", true);
+			session.removeAttribute("modify");
+		} else if (modify != null && !modify) {
+	        model.addAttribute("error", "수정 실패");
+	        session.removeAttribute("modify");
+	    }
+		
 //		모델에 책 목록을 추가하여 JSP에 전달
 		model.addAttribute("list", list);
 		return "admins/book_update";
@@ -58,8 +71,9 @@ public class BookController {
 		boolean isDuplicate = checkForDuplicates(list, vo.getBookCode());
 
 		if (isDuplicate) {
-			model.addAttribute("error", "교재ID 중복");
-			return "admins/book_update";
+			session.setAttribute("addList", false);
+			
+			return "redirect:/admin/book/list";
 		} 
 		// 중복되지 않으면 책 정보 추가
 		boolean success = (boolean)bookService.writebook(vo);
@@ -99,9 +113,12 @@ public class BookController {
 
 //	본사 교재 리스트중 교재 정보 수정
 	@PostMapping("/modify")
-	public String modify(@ModelAttribute BookVo vo) {
+	public String modify(@ModelAttribute BookVo vo, HttpSession session) {
 //		model을 받아와 book_list테이블의 부분 데이터를 수정
-		bookService.updatebook(vo);
+		boolean success = bookService.updatebook(vo);
+		if(success) {
+			session.setAttribute("modify", true);
+		}
 		return "redirect:/admin/book/list";
 	}
 }
