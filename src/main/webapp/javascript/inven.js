@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
         
     // 입력 날짜 저장하는 변수
-    let rememberedStockInDate = '';
+    let rememberedStartDate = '';
+    let rememberedEndDate = '';
     
     //	초기 페이지 로드를 위한 리스트 받기
     fetch('http://localhost:8080/Inventory/branch/initialList')
@@ -53,14 +54,22 @@ document.addEventListener('DOMContentLoaded', function() {
 		let form = document.getElementById('search-form');
 		let formData = new FormData(form);
 		
-		let stockInDateValue = document.getElementById('stockInDate').value;
-    	if (stockInDateValue) {
-            formData.append('stockInDate', stockInDateValue);
-            rememberedStockInDate = stockInDateValue; // 값을 기억
+		let startDateValue = document.getElementById('startDate').value;
+    	if (startDateValue) {
+            formData.append('startDate', startDateValue);
+            rememberedStartDate = startDateValue; // 값을 기억
         } else {
-            formData.append('stockInDate', ''); // 날짜가 없으면 빈 문자열을 서버에 전송
-            rememberedStockInDate = ''; // 값을 초기화
+            formData.append('startDate', ''); // 날짜가 없으면 빈 문자열을 서버에 전송
+            rememberedStartDate = ''; // 값을 초기화
         }
+        let endDateValue = document.getElementById('endDate').value;
+        if(endDateValue){
+			formData.append('endDate', endDateValue);
+			rememberedEndDate = endDateValue;
+		} else {
+			formData.append('endDate', '');
+			rememberedEndDate = '';
+		}
 		
 		let xhr = new XMLHttpRequest();
 		xhr.open('POST', 'http://localhost:8080/Inventory/branch/search', true);
@@ -85,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	// List로 table 만들어주는 함수
 	function createTable(data){
-		const table = document.getElementById('table');
+		const table = document.getElementById('inventory-table');
 		table.innerHTML ='';
 		table.innerHTML = `
 			<thead>
@@ -112,9 +121,12 @@ document.addEventListener('DOMContentLoaded', function() {
 	                </th>
 	                <th>
 	                	입고 총합
-	                	<input type="date" id="stockInDate" />
+	                	<input type="date" id="startDate" />
 	                </th>
-	                <th>출고 총합</th>
+	                <th>
+	                	출고 총합
+	                	<input type="date" id = "endDate"/>
+	                </th>
 	                <th>예상 재고</th>
 				</tr>
 			</thead>
@@ -143,11 +155,15 @@ document.addEventListener('DOMContentLoaded', function() {
             tbody.appendChild(row);
 		});
 	
-		document.getElementById('stockInDate').value = rememberedStockInDate;
+		document.getElementById('startDate').value = rememberedStartDate;
+		document.getElementById('endDate').value = rememberedEndDate;
 	
-		document.getElementById('stockInDate').addEventListener('change', function() {
-		sendAjaxRequest();
+		document.getElementById('startDate').addEventListener('change', function() {
+			sendAjaxRequest();
 		});
+		document.getElementById('endDate').addEventListener('change', function(){
+			sendAjaxRequest();
+		})
 	
 	}
 	

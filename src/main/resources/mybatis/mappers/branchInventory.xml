@@ -77,18 +77,24 @@
 	<select id="inInventorySum" parameterType = "map" resultType = "BookInventoryVo">
 		select book_code as bookCode, sum(quantity) as inventory from stock_in si join in_detail id on si.in_id = id.in_id 
 		where branch_id = #{branchId}
-		<if test = "stockInDate != null and stockInDate.trim() != ''">
-			and in_date > #{stockInDate}
+		<if test = "startDate != null and startDate.trim() != ''">
+			and in_date > #{startDate}
 		</if>
+		<if test="endDate != null and endDate.trim() != ''">
+        	<![CDATA[and in_date < #{endDate}]]>
+    	</if>
 		group by book_code
 	</select>
 	
 	<select id="outInventorySum" parameterType = "map" resultType = "BookInventoryVo">
 		select book_code as bookCode, sum(quantity) as inventory from stock_out so join out_detail od on so.out_id = od.out_id 
 		where branch_id = #{branchId}
-		<if test = "stockInDate != null and stockInDate.trim() != ''">
-			and out_date > #{stockInDate}
+		<if test = "startDate != null and startDate.trim() != ''">
+			and out_date > #{startDate}
 		</if>
+		<if test="endDate != null and endDate.trim() != ''">
+        	<![CDATA[and out_date < #{endDate}]]>
+    	</if>
 		group by book_code
 	</select>
 </mapper>

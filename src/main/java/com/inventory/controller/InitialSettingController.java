@@ -54,7 +54,6 @@ public class InitialSettingController {
         UserVo vo = (UserVo) session.getAttribute("authUser");
         Map <String, Object> params = new HashMap<>();
         params.put("branchId", vo.getBranchId());
-        params.put("keyword", "");
         params.put("orderBy", "kindcode desc, book_name asc");
         return bookInventoryService.invenList(params);
     }

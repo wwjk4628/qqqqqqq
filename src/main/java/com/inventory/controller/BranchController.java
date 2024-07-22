@@ -70,7 +70,8 @@ public class BranchController {
     public List<BookInventoryVo> search(HttpSession session, @RequestParam("keyword") String keyword,
     		@RequestParam(value="check", required = false) String check,
     		@RequestParam(value = "orderBy", defaultValue = "kindcode desc, book_name asc") String orderBy,
-    		@RequestParam(value = "stockInDate", required = false) String stockInDate) {
+    		@RequestParam(value = "startDate", required = false) String startDate,
+    		@RequestParam(value = "endDate", required = false) String endDate) {
         UserVo vo = (UserVo) session.getAttribute("authUser");
         
         Map <String, Object> params = new HashMap<>();
@@ -78,7 +79,8 @@ public class BranchController {
 	    params.put("keyword", keyword != null ? keyword : "");
 	    params.put("check", check);
 	    params.put("orderBy", orderBy != null ? orderBy.trim() : null);
-	    params.put("stockInDate", stockInDate);
+	    params.put("startDate", startDate);
+	    params.put("endDate", endDate);
         
         return bookInvenService.invenList(params);
     }

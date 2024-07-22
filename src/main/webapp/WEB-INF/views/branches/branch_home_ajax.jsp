@@ -34,7 +34,7 @@
 			<button type="button" id="resetOrderBy">정렬 초기화</button>
 		</form>
 		<br />
-		<table id="table">
+		<table id="inventory-table">
 		</table>
 		<p>
 			<a href="<c:url value='/branch/order/list'/>">오더 리스트 보기</a>

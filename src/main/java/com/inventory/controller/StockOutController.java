@@ -54,7 +54,6 @@ public class StockOutController {
         UserVo vo = (UserVo) session.getAttribute("authUser");
         Map <String, Object> params = new HashMap<>();
         params.put("branchId", vo.getBranchId());
-        params.put("keyword", "");
         params.put("check", "check");
         params.put("orderBy", "kindcode desc, book_name asc");
         return bookInvenService.invenList(params);
