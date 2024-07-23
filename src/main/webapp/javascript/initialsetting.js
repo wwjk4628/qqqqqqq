@@ -48,20 +48,18 @@ document.addEventListener('DOMContentLoaded', function() {
     function sendAjaxRequest() {
         let form = document.getElementById('search-form');
         let formData = new FormData(form);
-
-        let xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:8080/Inventory/branch/initial/search', true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.setRequestHeader(csrfHeader, csrfToken);
-
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                let response = JSON.parse(xhr.responseText);
-                updateTable(response);
-            }
-        };
-
-        xhr.send(new URLSearchParams(formData).toString());
+		
+		fetch('http://localhost:8080/Inventory/branch/initial/search', {
+			method: 'POST',
+			headers:{
+				'Content-Type': 'application/x-www-form-urlencoded',
+				[csrfHeader]: csrfToken
+			},
+			body: new URLSearchParams(formData).toString()
+		})
+		.then(response => response.json())
+		.then(data => updateTable(data))
+		.catch(error => console.error(error));
     }
     
     function updateTable(data) {
@@ -155,7 +153,7 @@ function initializeLocalStorage(data) {
 function handleQuantityInput(input) {
     const value = input.value.replace(/[^0-9]/g, '');
     
-    input.value = Math.max(value, 0);
+    input.value = Math.min(Math.max(value, 0), 100000000);
     saveLocalStorage();
 }
 

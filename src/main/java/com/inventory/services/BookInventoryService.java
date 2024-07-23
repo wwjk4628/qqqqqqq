@@ -12,8 +12,7 @@ public interface BookInventoryService {
 	
 	public int getInventory(BookInventoryVo vo);
 	
-	public List <BookInventoryVo> checkedGetList(String id);
-	public List <BookInventoryVo> checkedSearch (String id, String keyword);
-	
 	public List <BookInventoryVo> invenList (Map<String, Object> params);
+	
+	public String getBranchName (String branchId);
 }

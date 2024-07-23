@@ -21,8 +21,7 @@
 	<%@ include file="/WEB-INF/views/branch_includes/navigation.jsp"%>
 	
 	<div class="content">
-		<h1>branch id: ${authUser.branchId }의 교재 재고 현황</h1>
-		<h3>목록 (검색어: ${param.keyword })</h3>
+		<h1>${authUser.branchName} 지점의 교재 재고 현황</h1>
 		
 		<form id="search-form">
 			<label for="keyword">검색어: </label><input type="text" name="keyword" value="${param.keyword == null ? '' : param.keyword.trim()}">
@@ -32,10 +31,17 @@
 			<input type="submit" value="검색">
 			<button type="button" onclick="resetKeyword()" class="add">초기화</button>
 			<button type="button" id="resetOrderBy">정렬 초기화</button>
+			<button type="button" id="toggleTable">테이블 바꾸기</button>
 		</form>
 		<br />
-		<table id="inventory-table">
-		</table>
+		<div id="table-container" class="table-container">
+        <table id="inventory-table1" class="inventory-table">
+            <!-- Table 1 content -->
+        </table>
+        <table id="inventory-table2" class="inventory-table">
+            <!-- Table 2 content -->
+        </table>
+    </div>
 		<p>
 			<a href="<c:url value='/branch/order/list'/>">오더 리스트 보기</a>
 		</p>

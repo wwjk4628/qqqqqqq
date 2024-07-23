@@ -15,15 +15,14 @@ public class BookInventoryVo {
 	private String kindCode;
 	private int sumInInventory;
 	private int sumOutInventory;
-	
+	private int startInventory;
 	
 	public BookInventoryVo() {
 		
 	}
 
-
 	public BookInventoryVo(String branchId, String bookCode, String bookName, Integer inventory, Date inDate,
-			Date outDate, int price, String kindCode, int sumInInventory, int sumOutInventory) {
+			Date outDate, int price, String kindCode, int sumInInventory, int sumOutInventory, int startInventory) {
 
 		this.branchId = branchId;
 		this.bookCode = bookCode;
@@ -35,6 +34,7 @@ public class BookInventoryVo {
 		this.outDate = outDate;
 		this.sumInInventory = sumInInventory;
 		this.sumOutInventory = sumOutInventory;
+		this.startInventory = startInventory;
 	}
 
 	public String getBranchId() {
@@ -115,25 +115,28 @@ public class BookInventoryVo {
 		this.kindCode = kindCode;
 	}
 
-
 	public int getSumInInventory() {
 		return sumInInventory;
 	}
-
 
 	public void setSumInInventory(int sumInInventory) {
 		this.sumInInventory = sumInInventory;
 	}
 
-
 	public int getSumOutInventory() {
 		return sumOutInventory;
 	}
-
-
+	
 	public void setSumOutInventory(int sumOutInventory) {
 		this.sumOutInventory = sumOutInventory;
 	}
-	
+
+	public int getStartInventory() {
+		return startInventory;
+	}
+
+	public void setStartInventory(int startInventory) {
+		this.startInventory = startInventory;
+	}
 	
 }

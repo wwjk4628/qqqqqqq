@@ -12,11 +12,13 @@ public interface BookInventoryDao {
 	
 	public int getInventory(BookInventoryVo vo);
 	
-	public List <BookInventoryVo> checkedList(String id);
-	public List <BookInventoryVo> checkedSearch(String id, String keyword);
-	
 	public List <BookInventoryVo> invenList(Map <String, Object> params);
 	
 	public List <BookInventoryVo> sumStockIn(Map<String, Object> params);
 	public List <BookInventoryVo> sumStockOut(Map <String, Object> params);
+	
+	public List <BookInventoryVo> sumStockInBefore(Map<String, Object> params);
+	public List <BookInventoryVo> sumStockOutBefore(Map<String, Object> params);
+	
+	public String getBranchName(String branchId);
 }

@@ -34,57 +34,50 @@ document.addEventListener('DOMContentLoaded', function() {
 
         orderBy = orderByArray.join(', ');
         document.getElementById('orderBy').value = orderBy;
-        sendAjaxRequest();
+        document.getElementById('search-form').dispatchEvent(new Event('submit'));
     }
     // 정렬 초기화 버튼 이벤트
     document.getElementById('resetOrderBy').addEventListener('click', function() {
         orderByInput.value = '';
-        sendAjaxRequest();
-    });
-
-	// submit 강제 멈춤, Ajax 요청으로 넘기기
-	document.getElementById('search-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        sendAjaxRequest();
+        document.getElementById('search-form').dispatchEvent(new Event('submit'));
     });
     
 	// Ajax요청 List 받기 함수
-	function sendAjaxRequest(){
-		// search form 데이터 받아오기
+	document.getElementById('search-form').addEventListener('submit', function(event) {
+		event.preventDefault();
+		
 		let form = document.getElementById('search-form');
 		let formData = new FormData(form);
 		
 		let startDateValue = document.getElementById('startDate').value;
-    	if (startDateValue) {
-            formData.append('startDate', startDateValue);
-            rememberedStartDate = startDateValue; // 값을 기억
-        } else {
-            formData.append('startDate', ''); // 날짜가 없으면 빈 문자열을 서버에 전송
-            rememberedStartDate = ''; // 값을 초기화
-        }
-        let endDateValue = document.getElementById('endDate').value;
-        if(endDateValue){
-			formData.append('endDate', endDateValue);
-			rememberedEndDate = endDateValue;
+		if (startDateValue) {
+		    formData.append('startDate', startDateValue);
+		    rememberedStartDate = startDateValue; // 값을 기억
 		} else {
-			formData.append('endDate', '');
-			rememberedEndDate = '';
+		    formData.append('startDate', ''); // 날짜가 없으면 빈 문자열을 서버에 전송
+		    rememberedStartDate = ''; // 값을 초기화
+		}
+		let endDateValue = document.getElementById('endDate').value;
+		if(endDateValue){
+		    formData.append('endDate', endDateValue);
+		    rememberedEndDate = endDateValue;
+		} else {
+		    formData.append('endDate', '');
+		    rememberedEndDate = '';
 		}
 		
-		let xhr = new XMLHttpRequest();
-		xhr.open('POST', 'http://localhost:8080/Inventory/branch/search', true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.setRequestHeader(csrfHeader, csrfToken);
-        
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                let response = JSON.parse(xhr.responseText);
-                createTable(response);
-            }
-        };
-
-        xhr.send(new URLSearchParams(formData).toString());
-	}
+		fetch('http://localhost:8080/Inventory/branch/search', {
+		    method: 'POST',
+		    headers: {
+		        'Content-Type': 'application/x-www-form-urlencoded',
+		        [csrfHeader]: csrfToken
+		    },
+		    body: new URLSearchParams(formData).toString()
+		})
+		.then(response => response.json())
+		.then(data => createTable(data))
+		.catch(error => console.error(error));
+	})
 	
 	// 검색어 초기화 로직
     window.resetKeyword = function() {
@@ -92,80 +85,136 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('search-form').dispatchEvent(new Event('submit')); // 폼 제출 이벤트를 강제로 발생
     };
 	
+	// Table toggle 버튼 이벤트 추가
+    document.getElementById('toggleTable').addEventListener('click', function() {
+        let table1 = document.getElementById('inventory-table1');
+        let table2 = document.getElementById('inventory-table2');
+        if (table1.style.display === 'none') {
+            table1.style.display = '';
+            table2.style.display = 'none';
+        } else {
+            table1.style.display = 'none';
+            table2.style.display = '';
+        }
+    });
+	
 	// List로 table 만들어주는 함수
 	function createTable(data){
-		const table = document.getElementById('inventory-table');
-		table.innerHTML ='';
-		table.innerHTML = `
-			<thead>
-				<tr>
-					<th>번호</th>
-					<th onclick="updateOrderBy('kindcode')">분류
-	                    ${orderBy.includes('kindcode asc') ? '▲' : orderBy.includes('kindcode desc') ? '▼' : ''}
-	                </th>
-	                <th onclick="updateOrderBy('bookName')">책 이름
-	                	${orderBy.includes('bookName asc') ? '▲' : orderBy.includes('bookName desc') ? '▼' : ''}
-	                </th>
-	                <th onclick="updateOrderBy('price')">가격
-	                	${orderBy.includes('price asc') ? '▲' : orderBy.includes('price desc') ? '▼' : ''}
-	                </th>
-	                <th onclick="updateOrderBy('inventory')">재고
-	                	${orderBy.includes('inventory asc') ? '▲' : orderBy.includes('inventory desc') ? '▼' : ''}
-	                </th>
-	                <th>재고*가격</th>
-	                <th onclick="updateOrderBy('inDate')">최근 입고일
-	                	${orderBy.includes('inDate asc') ? '▲' : orderBy.includes('inDate desc') ? '▼' : ''}
-	                </th>
-	                <th onclick="updateOrderBy('outDate')">최근 출고일
-	                    ${orderBy.includes('outDate asc') ? '▲' : orderBy.includes('outDate desc') ? '▼' : ''}
-	                </th>
-	                <th>
-	                	입고 총합
-	                	<input type="date" id="startDate" />
-	                </th>
-	                <th>
-	                	출고 총합
-	                	<input type="date" id = "endDate"/>
-	                </th>
-	                <th>예상 재고</th>
-				</tr>
-			</thead>
-			<tbody id="table-body">
-        	</tbody>
-		`;
-		const tbody = table.querySelector('#table-body');
-        tbody.innerHTML = '';
-		const numberFormatter = new Intl.NumberFormat('ko-KR', { style: 'decimal', minimumFractionDigits: 0 });
+		const table1 = document.getElementById('inventory-table1');
+        const table2 = document.getElementById('inventory-table2');
+        table1.innerHTML = '';
+        table2.innerHTML = '';
+
+        table1.innerHTML = `
+            <thead>
+                <tr>
+                    <th rowspan="2" class = "mordan">번호</th>
+                    <th onclick="updateOrderBy('kindcode')" rowspan="2" class = "mordan">분류
+                        ${orderBy.includes('kindcode asc') ? '▲' : orderBy.includes('kindcode desc') ? '▼' : ''}
+                    </th>
+                    <th onclick="updateOrderBy('bookName')" rowspan="2" class = "mordan">책 이름
+                        ${orderBy.includes('bookName asc') ? '▲' : orderBy.includes('bookName desc') ? '▼' : ''}
+                    </th>
+                    <th onclick="updateOrderBy('price')" rowspan="2" class = "mordan">가격
+                        ${orderBy.includes('price asc') ? '▲' : orderBy.includes('price desc') ? '▼' : ''}
+                    </th>
+                    <th onclick="updateOrderBy('inventory')" rowspan="2" class = "mordan">현재 재고
+                        ${orderBy.includes('inventory asc') ? '▲' : orderBy.includes('inventory desc') ? '▼' : ''}
+                    </th>
+                    <th rowspan="2" class = "mordan">재고*가격</th>
+                    <th onclick="updateOrderBy('inDate')" rowspan="2" class = "mordan">최근 입고일
+                        ${orderBy.includes('inDate asc') ? '▲' : orderBy.includes('inDate desc') ? '▼' : ''}
+                    </th>
+                    <th onclick="updateOrderBy('outDate')" rowspan="2" class = "mordan">최근 출고일
+                        ${orderBy.includes('outDate asc') ? '▲' : orderBy.includes('outDate desc') ? '▼' : ''}
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="table-body1">
+            </tbody>
+        `;
+        
+        table2.innerHTML = `
+            <thead>
+                <tr>
+                    <th rowspan="2" class = "mordan">번호</th>
+                    <th onclick="updateOrderBy('kindcode')" rowspan="2" class = "mordan">분류
+                        ${orderBy.includes('kindcode asc') ? '▲' : orderBy.includes('kindcode desc') ? '▼' : ''}
+                    </th>
+                    <th onclick="updateOrderBy('bookName')" rowspan="2" class = "mordan">책 이름
+                        ${orderBy.includes('bookName asc') ? '▲' : orderBy.includes('bookName desc') ? '▼' : ''}
+                    </th>
+                    <th onclick="updateOrderBy('price')" rowspan="2" class = "mordan">가격
+                        ${orderBy.includes('price asc') ? '▲' : orderBy.includes('price desc') ? '▼' : ''}
+                    </th>
+                    <th onclick="updateOrderBy('inventory')" rowspan="2" class = "mordan">현재 재고
+                        ${orderBy.includes('inventory asc') ? '▲' : orderBy.includes('inventory desc') ? '▼' : ''}
+                    </th>
+                    <th class="date-input-th" colspan="2">
+                        <input type="date" id="startDate" />
+                    </th>
+                    <th class="date-input-th" colspan="2">
+                        <input type="date" id="endDate" />
+                    </th>
+                </tr>
+                <tr>
+                    <th class = "sita">시작 재고</th>
+                    <th class = "sita">입고 총합</th>
+                    <th class = "sita">출고 총합</th>
+                    <th class = "sita">예상 재고</th>
+                </tr>
+            </thead>
+            <tbody id="table-body2">
+            </tbody>
+        `;
+
+        const tbody1 = table1.querySelector('#table-body1');
+        const tbody2 = table2.querySelector('#table-body2');
+        tbody1.innerHTML = '';
+        tbody2.innerHTML = '';
+        const numberFormatter = new Intl.NumberFormat('ko-KR', { style: 'decimal', minimumFractionDigits: 0 });
         data.forEach((item, index) => {
-            let row = document.createElement('tr');
-            row.innerHTML = `
+            let row1 = document.createElement('tr');
+            let row2 = document.createElement('tr');
+            row1.innerHTML = `
                 <td>${index + 1}</td>
-				<td>${getKindCode(item.kindCode)}</td>
-				<td>${item.bookName}</td>
-				<td>${numberFormatter.format(item.price)}</td>
-                <td>${numberFormatter.format(item.inventory)}</td>
+                <td>${getKindCode(item.kindCode)}</td>
+                <td>${item.bookName}</td>
+                <td>${numberFormatter.format(item.price)}</td>
+                <td><strong>${numberFormatter.format(item.inventory)}</strong></td>
                 <td>${numberFormatter.format(item.inventory * item.price)}</td>
-        		<td>${item.inDate }</td>
-        		<td>${item.outDate }</td>
-        		<td>${numberFormatter.format(item.sumInInventory)}</td>
-        		<td>${numberFormatter.format(item.sumOutInventory)}</td>
-        		<td>${numberFormatter.format(item.sumInInventory - item.sumOutInventory)}</td>
+                <td>${item.inDate}</td>
+                <td>${item.outDate}</td>
             `;
 
-            tbody.appendChild(row);
-		});
+            row2.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${getKindCode(item.kindCode)}</td>
+                <td>${item.bookName}</td>
+                <td>${numberFormatter.format(item.price)}</td>
+                <td><strong>${numberFormatter.format(item.inventory)}</strong></td>
+                <td>${numberFormatter.format(item.startInventory)}</td>
+                <td>${numberFormatter.format(item.sumInInventory)}</td>
+                <td>${numberFormatter.format(item.sumOutInventory)}</td>
+                <td>${numberFormatter.format(item.startInventory + item.sumInInventory - item.sumOutInventory)}</td>
+            `;
+
+            tbody1.appendChild(row1);
+            tbody2.appendChild(row2);
+        });
 	
 		document.getElementById('startDate').value = rememberedStartDate;
 		document.getElementById('endDate').value = rememberedEndDate;
 	
 		document.getElementById('startDate').addEventListener('change', function() {
-			sendAjaxRequest();
+			document.getElementById('search-form').dispatchEvent(new Event('submit'));
 		});
 		document.getElementById('endDate').addEventListener('change', function(){
-			sendAjaxRequest();
+			document.getElementById('search-form').dispatchEvent(new Event('submit'));
 		})
 	
 	}
+	document.getElementById('inventory-table2').style.display = 'none';
 	
 })
 
