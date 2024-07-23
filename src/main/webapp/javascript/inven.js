@@ -34,12 +34,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         orderBy = orderByArray.join(', ');
         document.getElementById('orderBy').value = orderBy;
-        sendAjaxRequest();
+        document.getElementById('search-form').dispatchEvent(new Event('submit'));
     }
     // 정렬 초기화 버튼 이벤트
     document.getElementById('resetOrderBy').addEventListener('click', function() {
         orderByInput.value = '';
-        sendAjaxRequest();
+        document.getElementById('search-form').dispatchEvent(new Event('submit'));
     });
     
 	// Ajax요청 List 받기 함수
@@ -156,10 +156,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.getElementById('endDate').value = rememberedEndDate;
 	
 		document.getElementById('startDate').addEventListener('change', function() {
-			sendAjaxRequest();
+			document.getElementById('search-form').dispatchEvent(new Event('submit'));
 		});
 		document.getElementById('endDate').addEventListener('change', function(){
-			sendAjaxRequest();
+			document.getElementById('search-form').dispatchEvent(new Event('submit'));
 		})
 	
 	}
