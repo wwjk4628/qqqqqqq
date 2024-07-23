@@ -147,21 +147,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     <th onclick="updateOrderBy('price')" rowspan="2">가격
                         ${orderBy.includes('price asc') ? '▲' : orderBy.includes('price desc') ? '▼' : ''}
                     </th>
-                    <th onclick="updateOrderBy('inventory')" rowspan="2"><strong>현재 재고
+                    <th onclick="updateOrderBy('inventory')" rowspan="2">현재 재고
                         ${orderBy.includes('inventory asc') ? '▲' : orderBy.includes('inventory desc') ? '▼' : ''}
-                    </strong></th>
-                    <th colspan="2">
+                    </th>
+                    <th class="date-input-th" colspan="2">
                         <input type="date" id="startDate" />
                     </th>
-                    <th colspan="2">
+                    <th class="date-input-th" colspan="2">
                         <input type="date" id="endDate" />
                     </th>
                 </tr>
                 <tr>
-                    <th>시작 재고</th>
-                    <th>입고 총합</th>
-                    <th>출고 총합</th>
-                    <th>예상 재고</th>
+                    <th class = "sita">시작 재고</th>
+                    <th class = "sita">입고 총합</th>
+                    <th class = "sita">출고 총합</th>
+                    <th class = "sita">예상 재고</th>
                 </tr>
             </thead>
             <tbody id="table-body2">

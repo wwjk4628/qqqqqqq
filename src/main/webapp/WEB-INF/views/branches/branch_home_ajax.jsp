@@ -34,10 +34,14 @@
 			<button type="button" id="toggleTable">테이블 바꾸기</button>
 		</form>
 		<br />
-		<table id="inventory-table1">
-		</table>
-		<table id="inventory-table2">
-		</table>
+		<div id="table-container" class="table-container">
+        <table id="inventory-table1" class="inventory-table">
+            <!-- Table 1 content -->
+        </table>
+        <table id="inventory-table2" class="inventory-table">
+            <!-- Table 2 content -->
+        </table>
+    </div>
 		<p>
 			<a href="<c:url value='/branch/order/list'/>">오더 리스트 보기</a>
 		</p>
