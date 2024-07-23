@@ -10,13 +10,10 @@
         <setting name="useColumnLabel" value="true" />
         <setting name="useGeneratedKeys" value="true" />
         <setting name="autoMappingBehavior" value="PARTIAL" />
-        <setting name="jdbcTypeForNull" value="NULL"/>
-        
+        <setting name="jdbcTypeForNull" value="NULL"/>        
     </settings>
 
-
 	<typeAliases>
-		<typeAlias type="com.inventory.repositories.vo.StockOutVo" alias="StockOutVo" />
 		<typeAlias type="com.inventory.repositories.vo.BookVo" alias="BookVo" />
 		<typeAlias type="com.inventory.repositories.vo.UserVo" alias="UserVo" />
 		<typeAlias type="com.inventory.repositories.vo.BookInventoryVo" alias="BookInventoryVo" />
@@ -26,7 +23,6 @@
 
     <mappers>
         <mapper resource="mybatis/mappers/branchInventory.xml" />
-        <mapper resource="mybatis/mappers/StockOutMapper.xml"/>
         <mapper resource="mybatis/mappers/book.xml" />
         <mapper resource="mybatis/mappers/users.xml" />
         <mapper resource="mybatis/mappers/order.xml" />
