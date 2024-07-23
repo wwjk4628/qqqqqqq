@@ -61,7 +61,7 @@
 
 	<!-- 계정 승인 시 인벤토리 채워주는 역할 -->
 	<insert id="initialization" parameterType="map">
-		insert intobranch_inventory (branch_id, book_code, inventory) values (#{id}, #{bookCode}, 0)
+		insert into branch_inventory (branch_id, book_code, inventory) values (#{id}, #{bookCode}, 0)
 	</insert>
 
 	<select id="getInventory" parameterType="BookInventoryVo" resultType="int">
