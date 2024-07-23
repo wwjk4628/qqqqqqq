@@ -41,50 +41,43 @@ document.addEventListener('DOMContentLoaded', function() {
         orderByInput.value = '';
         sendAjaxRequest();
     });
-
-	// submit 강제 멈춤, Ajax 요청으로 넘기기
-	document.getElementById('search-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        sendAjaxRequest();
-    });
     
 	// Ajax요청 List 받기 함수
-	function sendAjaxRequest(){
-		// search form 데이터 받아오기
+	document.getElementById('search-form').addEventListener('submit', function(event) {
+		event.preventDefault();
+		
 		let form = document.getElementById('search-form');
 		let formData = new FormData(form);
 		
 		let startDateValue = document.getElementById('startDate').value;
-    	if (startDateValue) {
-            formData.append('startDate', startDateValue);
-            rememberedStartDate = startDateValue; // 값을 기억
-        } else {
-            formData.append('startDate', ''); // 날짜가 없으면 빈 문자열을 서버에 전송
-            rememberedStartDate = ''; // 값을 초기화
-        }
-        let endDateValue = document.getElementById('endDate').value;
-        if(endDateValue){
-			formData.append('endDate', endDateValue);
-			rememberedEndDate = endDateValue;
+		if (startDateValue) {
+		    formData.append('startDate', startDateValue);
+		    rememberedStartDate = startDateValue; // 값을 기억
 		} else {
-			formData.append('endDate', '');
-			rememberedEndDate = '';
+		    formData.append('startDate', ''); // 날짜가 없으면 빈 문자열을 서버에 전송
+		    rememberedStartDate = ''; // 값을 초기화
+		}
+		let endDateValue = document.getElementById('endDate').value;
+		if(endDateValue){
+		    formData.append('endDate', endDateValue);
+		    rememberedEndDate = endDateValue;
+		} else {
+		    formData.append('endDate', '');
+		    rememberedEndDate = '';
 		}
 		
-		let xhr = new XMLHttpRequest();
-		xhr.open('POST', 'http://localhost:8080/Inventory/branch/search', true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.setRequestHeader(csrfHeader, csrfToken);
-        
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                let response = JSON.parse(xhr.responseText);
-                createTable(response);
-            }
-        };
-
-        xhr.send(new URLSearchParams(formData).toString());
-	}
+		fetch('http://localhost:8080/Inventory/branch/search', {
+		    method: 'POST',
+		    headers: {
+		        'Content-Type': 'application/x-www-form-urlencoded',
+		        [csrfHeader]: csrfToken
+		    },
+		    body: new URLSearchParams(formData).toString()
+		})
+		.then(response => response.json())
+		.then(data => createTable(data))
+		.catch(error => console.error(error));
+	})
 	
 	// 검색어 초기화 로직
     window.resetKeyword = function() {
@@ -153,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
         		<td>${numberFormatter.format(item.startInventory)}</td>
         		<td>${numberFormatter.format(item.sumInInventory)}</td>
         		<td>${numberFormatter.format(item.sumOutInventory)}</td>
-        		<td>${numberFormatter.format(item.sumInInventory - item.sumOutInventory)}</td>
+        		<td>${numberFormatter.format(item.startInventory + item.sumInInventory - item.sumOutInventory)}</td>
             `;
 
             tbody.appendChild(row);
