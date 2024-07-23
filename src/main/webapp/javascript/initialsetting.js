@@ -155,7 +155,7 @@ function initializeLocalStorage(data) {
 function handleQuantityInput(input) {
     const value = input.value.replace(/[^0-9]/g, '');
     
-    input.value = Math.max(value, 0);
+    input.value = Math.min(Math.max(value, 0), 100000000);
     saveLocalStorage();
 }
 
