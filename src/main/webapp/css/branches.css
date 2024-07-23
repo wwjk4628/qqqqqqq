@@ -415,6 +415,9 @@ footer {
 	overflow-y: auto; /* 세로 스크롤 */
 }
 
-#inventory-table{
+#inventory-table1{
+	width: 100%;
+}
+#inventory-table2{
 	width: 100%;
 }

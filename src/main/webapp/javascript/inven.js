@@ -85,72 +85,123 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('search-form').dispatchEvent(new Event('submit')); // 폼 제출 이벤트를 강제로 발생
     };
 	
+	// Table toggle 버튼 이벤트 추가
+    document.getElementById('toggleTable').addEventListener('click', function() {
+        let table1 = document.getElementById('inventory-table1');
+        let table2 = document.getElementById('inventory-table2');
+        if (table1.style.display === 'none') {
+            table1.style.display = '';
+            table2.style.display = 'none';
+        } else {
+            table1.style.display = 'none';
+            table2.style.display = '';
+        }
+    });
+	
 	// List로 table 만들어주는 함수
 	function createTable(data){
-		const table = document.getElementById('inventory-table');
-		table.innerHTML ='';
-		table.innerHTML = `
-			<thead>
-				<tr>
-					<th rowspan = "2">번호</th>
-					<th onclick="updateOrderBy('kindcode')" rowspan="2">분류
-	                    ${orderBy.includes('kindcode asc') ? '▲' : orderBy.includes('kindcode desc') ? '▼' : ''}
-	                </th>
-	                <th onclick="updateOrderBy('bookName')" rowspan="2">책 이름
-	                	${orderBy.includes('bookName asc') ? '▲' : orderBy.includes('bookName desc') ? '▼' : ''}
-	                </th>
-	                <th onclick="updateOrderBy('price')" rowspan="2">가격
-	                	${orderBy.includes('price asc') ? '▲' : orderBy.includes('price desc') ? '▼' : ''}
-	                </th>
-	                <th onclick="updateOrderBy('inventory')" rowspan="2"><strong>재고
-	                	${orderBy.includes('inventory asc') ? '▲' : orderBy.includes('inventory desc') ? '▼' : ''}
-	                </strong></th>
-	                <th rowspan = "2">재고*가격</th>
-	                <th onclick="updateOrderBy('inDate')" rowspan="2">최근 입고일
-	                	${orderBy.includes('inDate asc') ? '▲' : orderBy.includes('inDate desc') ? '▼' : ''}
-	                </th>
-	                <th onclick="updateOrderBy('outDate')" rowspan="2">최근 출고일
-	                    ${orderBy.includes('outDate asc') ? '▲' : orderBy.includes('outDate desc') ? '▼' : ''}
-	                </th>
-	                <th colspan ="2">
-	                	<input type="date" id="startDate" />
-	                </th>
-	                <th colspan ="2">
-	                	<input type="date" id = "endDate"/>
-	                </th>
-				</tr>
-				<tr>
-					<th>시작 재고</th>
-					<th>입고 총합</th>
-					<th>출고 총합</th>	
-					<th>예상 재고</th>		
-				</tr>
-			</thead>
-			<tbody id="table-body">
-        	</tbody>
-		`;
-		const tbody = table.querySelector('#table-body');
-        tbody.innerHTML = '';
-		const numberFormatter = new Intl.NumberFormat('ko-KR', { style: 'decimal', minimumFractionDigits: 0 });
+		const table1 = document.getElementById('inventory-table1');
+        const table2 = document.getElementById('inventory-table2');
+        table1.innerHTML = '';
+        table2.innerHTML = '';
+
+        table1.innerHTML = `
+            <thead>
+                <tr>
+                    <th rowspan="2">번호</th>
+                    <th onclick="updateOrderBy('kindcode')" rowspan="2">분류
+                        ${orderBy.includes('kindcode asc') ? '▲' : orderBy.includes('kindcode desc') ? '▼' : ''}
+                    </th>
+                    <th onclick="updateOrderBy('bookName')" rowspan="2">책 이름
+                        ${orderBy.includes('bookName asc') ? '▲' : orderBy.includes('bookName desc') ? '▼' : ''}
+                    </th>
+                    <th onclick="updateOrderBy('price')" rowspan="2">가격
+                        ${orderBy.includes('price asc') ? '▲' : orderBy.includes('price desc') ? '▼' : ''}
+                    </th>
+                    <th onclick="updateOrderBy('inventory')" rowspan="2"><strong>현재 재고
+                        ${orderBy.includes('inventory asc') ? '▲' : orderBy.includes('inventory desc') ? '▼' : ''}
+                    </strong></th>
+                    <th rowspan="2">재고*가격</th>
+                    <th onclick="updateOrderBy('inDate')" rowspan="2">최근 입고일
+                        ${orderBy.includes('inDate asc') ? '▲' : orderBy.includes('inDate desc') ? '▼' : ''}
+                    </th>
+                    <th onclick="updateOrderBy('outDate')" rowspan="2">최근 출고일
+                        ${orderBy.includes('outDate asc') ? '▲' : orderBy.includes('outDate desc') ? '▼' : ''}
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="table-body1">
+            </tbody>
+        `;
+        
+        table2.innerHTML = `
+            <thead>
+                <tr>
+                    <th rowspan="2">번호</th>
+                    <th onclick="updateOrderBy('kindcode')" rowspan="2">분류
+                        ${orderBy.includes('kindcode asc') ? '▲' : orderBy.includes('kindcode desc') ? '▼' : ''}
+                    </th>
+                    <th onclick="updateOrderBy('bookName')" rowspan="2">책 이름
+                        ${orderBy.includes('bookName asc') ? '▲' : orderBy.includes('bookName desc') ? '▼' : ''}
+                    </th>
+                    <th onclick="updateOrderBy('price')" rowspan="2">가격
+                        ${orderBy.includes('price asc') ? '▲' : orderBy.includes('price desc') ? '▼' : ''}
+                    </th>
+                    <th onclick="updateOrderBy('inventory')" rowspan="2"><strong>현재 재고
+                        ${orderBy.includes('inventory asc') ? '▲' : orderBy.includes('inventory desc') ? '▼' : ''}
+                    </strong></th>
+                    <th colspan="2">
+                        <input type="date" id="startDate" />
+                    </th>
+                    <th colspan="2">
+                        <input type="date" id="endDate" />
+                    </th>
+                </tr>
+                <tr>
+                    <th>시작 재고</th>
+                    <th>입고 총합</th>
+                    <th>출고 총합</th>
+                    <th>예상 재고</th>
+                </tr>
+            </thead>
+            <tbody id="table-body2">
+            </tbody>
+        `;
+
+        const tbody1 = table1.querySelector('#table-body1');
+        const tbody2 = table2.querySelector('#table-body2');
+        tbody1.innerHTML = '';
+        tbody2.innerHTML = '';
+        const numberFormatter = new Intl.NumberFormat('ko-KR', { style: 'decimal', minimumFractionDigits: 0 });
         data.forEach((item, index) => {
-            let row = document.createElement('tr');
-            row.innerHTML = `
+            let row1 = document.createElement('tr');
+            let row2 = document.createElement('tr');
+            row1.innerHTML = `
                 <td>${index + 1}</td>
-				<td>${getKindCode(item.kindCode)}</td>
-				<td>${item.bookName}</td>
-				<td>${numberFormatter.format(item.price)}</td>
+                <td>${getKindCode(item.kindCode)}</td>
+                <td>${item.bookName}</td>
+                <td>${numberFormatter.format(item.price)}</td>
                 <td><strong>${numberFormatter.format(item.inventory)}</strong></td>
                 <td>${numberFormatter.format(item.inventory * item.price)}</td>
-        		<td>${item.inDate }</td>
-        		<td>${item.outDate }</td>
-        		<td>${numberFormatter.format(item.startInventory)}</td>
-        		<td>${numberFormatter.format(item.sumInInventory)}</td>
-        		<td>${numberFormatter.format(item.sumOutInventory)}</td>
-        		<td>${numberFormatter.format(item.startInventory + item.sumInInventory - item.sumOutInventory)}</td>
+                <td>${item.inDate}</td>
+                <td>${item.outDate}</td>
             `;
 
-            tbody.appendChild(row);
-		});
+            row2.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${getKindCode(item.kindCode)}</td>
+                <td>${item.bookName}</td>
+                <td>${numberFormatter.format(item.price)}</td>
+                <td><strong>${numberFormatter.format(item.inventory)}</strong></td>
+                <td>${numberFormatter.format(item.startInventory)}</td>
+                <td>${numberFormatter.format(item.sumInInventory)}</td>
+                <td>${numberFormatter.format(item.sumOutInventory)}</td>
+                <td>${numberFormatter.format(item.startInventory + item.sumInInventory - item.sumOutInventory)}</td>
+            `;
+
+            tbody1.appendChild(row1);
+            tbody2.appendChild(row2);
+        });
 	
 		document.getElementById('startDate').value = rememberedStartDate;
 		document.getElementById('endDate').value = rememberedEndDate;
@@ -163,6 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		})
 	
 	}
+	document.getElementById('inventory-table2').style.display = 'none';
 	
 })
 

@@ -31,9 +31,12 @@
 			<input type="submit" value="검색">
 			<button type="button" onclick="resetKeyword()" class="add">초기화</button>
 			<button type="button" id="resetOrderBy">정렬 초기화</button>
+			<button type="button" id="toggleTable">테이블 바꾸기</button>
 		</form>
 		<br />
-		<table id="inventory-table">
+		<table id="inventory-table1">
+		</table>
+		<table id="inventory-table2">
 		</table>
 		<p>
 			<a href="<c:url value='/branch/order/list'/>">오더 리스트 보기</a>
