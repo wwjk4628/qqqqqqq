@@ -1,6 +1,8 @@
 package com.inventory.services;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -55,8 +57,18 @@ public class BookServiceImpl implements BookService{
 		return vo;
 	}
 
-	
-	
-	
-	
+	@Override
+	public int insertInventory(String bookCode) {
+		List <String> branchIdList = bookDao.branchIdList();
+		
+		for (String id: branchIdList) {
+			Map <String, String> map = new HashMap<>();
+			map.put("id", id);
+			map.put("bookCode", bookCode);
+			bookDao.insertInventory(map);
+		}
+		
+		return 1;
+	}
+
 }

@@ -3,6 +3,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
         
+    // 입력 날짜 저장하는 변수
+    let rememberedStartDate = '';
+    let rememberedEndDate = '';
+    
     //	초기 페이지 로드를 위한 리스트 받기
     fetch('http://localhost:8080/Inventory/branch/initialList')
     .then(response => response.json())
@@ -43,11 +47,29 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         sendAjaxRequest();
     });
+    
 	// Ajax요청 List 받기 함수
 	function sendAjaxRequest(){
 		// search form 데이터 받아오기
 		let form = document.getElementById('search-form');
 		let formData = new FormData(form);
+		
+		let startDateValue = document.getElementById('startDate').value;
+    	if (startDateValue) {
+            formData.append('startDate', startDateValue);
+            rememberedStartDate = startDateValue; // 값을 기억
+        } else {
+            formData.append('startDate', ''); // 날짜가 없으면 빈 문자열을 서버에 전송
+            rememberedStartDate = ''; // 값을 초기화
+        }
+        let endDateValue = document.getElementById('endDate').value;
+        if(endDateValue){
+			formData.append('endDate', endDateValue);
+			rememberedEndDate = endDateValue;
+		} else {
+			formData.append('endDate', '');
+			rememberedEndDate = '';
+		}
 		
 		let xhr = new XMLHttpRequest();
 		xhr.open('POST', 'http://localhost:8080/Inventory/branch/search', true);
@@ -72,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	// List로 table 만들어주는 함수
 	function createTable(data){
-		const table = document.getElementById('table');
+		const table = document.getElementById('inventory-table');
 		table.innerHTML ='';
 		table.innerHTML = `
 			<thead>
@@ -97,6 +119,15 @@ document.addEventListener('DOMContentLoaded', function() {
 	                <th onclick="updateOrderBy('outDate')">최근 출고일
 	                    ${orderBy.includes('outDate asc') ? '▲' : orderBy.includes('outDate desc') ? '▼' : ''}
 	                </th>
+	                <th>
+	                	입고 총합
+	                	<input type="date" id="startDate" />
+	                </th>
+	                <th>
+	                	출고 총합
+	                	<input type="date" id = "endDate"/>
+	                </th>
+	                <th>예상 재고</th>
 				</tr>
 			</thead>
 			<tbody id="table-body">
@@ -112,15 +143,30 @@ document.addEventListener('DOMContentLoaded', function() {
 				<td>${getKindCode(item.kindCode)}</td>
 				<td>${item.bookName}</td>
 				<td>${numberFormatter.format(item.price)}</td>
-                <td>${item.inventory}</td>
+                <td>${numberFormatter.format(item.inventory)}</td>
                 <td>${numberFormatter.format(item.inventory * item.price)}</td>
         		<td>${item.inDate }</td>
         		<td>${item.outDate }</td>
+        		<td>${numberFormatter.format(item.sumInInventory)}</td>
+        		<td>${numberFormatter.format(item.sumOutInventory)}</td>
+        		<td>${numberFormatter.format(item.sumInInventory - item.sumOutInventory)}</td>
             `;
 
             tbody.appendChild(row);
 		});
+	
+		document.getElementById('startDate').value = rememberedStartDate;
+		document.getElementById('endDate').value = rememberedEndDate;
+	
+		document.getElementById('startDate').addEventListener('change', function() {
+			sendAjaxRequest();
+		});
+		document.getElementById('endDate').addEventListener('change', function(){
+			sendAjaxRequest();
+		})
+	
 	}
+	
 })
 
 function getKindCode(kindCode) {

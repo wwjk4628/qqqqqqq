@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.inventory.repositories.vo.BookVo;
 
-
-
 public interface BookService {
 	public List<BookVo> getbookList();
 
@@ -19,5 +17,5 @@ public interface BookService {
 	
 	public BookVo getData(String bookCode);
 	
-	
+	public int insertInventory(String bookCode);
 }

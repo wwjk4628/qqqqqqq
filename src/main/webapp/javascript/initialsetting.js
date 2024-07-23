@@ -99,11 +99,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 	<input type="hidden" name="bookName" value="${item.bookName}">
                 <td>${item.inventory}</td>
                 <td>
-                <input type="number" name="quantity" min="0"
-                    data-book-code="${item.bookCode}"
-                    oninput="handleQuantityInput(this)"
-                    onpaste="handlePaste(event)">
-            </td>
+                <input type="number" name="quantity" min="0" data-book-code="${item.bookCode}"
+                    oninput="handleQuantityInput(this)" onpaste="handlePaste(event)">
+            	</td>
             `;
 
             tbody.appendChild(row);
@@ -137,17 +135,20 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeLocalStorage(data) {
     const quantities = {};
     const bookNames = {};
+    const inventories = {};
 
 	// bookCode 기반의 빈 배열 만들어놓기
     data.forEach(item => {
         const bookCode = item.bookCode;
         quantities[bookCode] = null;
         bookNames[bookCode] = item.bookName;
+        inventories[bookCode] = item.inventory;
     });
 
 	// localStorage에 json으로 배열 저장
     localStorage.setItem('quantities', JSON.stringify(quantities));
     localStorage.setItem('bookNames', JSON.stringify(bookNames));
+    localStorage.setItem('inventories', JSON.stringify(inventories));
 }
 
 // 입력값을 필터링하는 함수
@@ -244,11 +245,14 @@ function addGije() {
     // LocalStorage에서 수량과 코멘트를 불러옴
     const quantities = JSON.parse(localStorage.getItem('quantities') || '{}');
     const bookNames = JSON.parse(localStorage.getItem('bookNames') || '{}');
+    const inventories = JSON.parse(localStorage.getItem('inventories') || '{}');
 
     // LocalStorage의 모든 항목 불러오기
     Object.keys(quantities).forEach(bookCode => {
-        const quantity = quantities[bookCode];
+        const quantity = parseInt(quantities[bookCode], 10) || 0;
         const bookName = bookNames[bookCode] || '정보 없음';
+        const inventory = parseInt(inventories[bookCode], 10) || 0;
+        const expectedInventory = (quantity + inventory);
         
         // 수량이 0보다 큰 경우만 모달에 추가
         if (quantity > 0) {
@@ -256,6 +260,7 @@ function addGije() {
                 <div>
                     <p><strong>교재명:</strong> ${bookName}</p>
                     <p><strong>수량:</strong> ${quantity}</p>
+                    <p><strong>예상 재고:</strong> ${expectedInventory}</p>
                     <button type="button" onclick="deleteGije('${bookCode}')" class="delete">삭제</button>
                     <hr>
                 </div>

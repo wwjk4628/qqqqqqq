@@ -2,6 +2,7 @@ package com.inventory.services;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,8 +44,27 @@ public class BookInventoryServiceImpl implements BookInventoryService {
 
 	@Override
 	public List<BookInventoryVo> invenList(Map<String, Object> params) {
-		return bookInventoryDao.invenList(params);
+		List<BookInventoryVo> sumStockInInventory = bookInventoryDao.sumStockIn(params);
+		List <BookInventoryVo> inventoryList = bookInventoryDao.invenList(params);
+		
+		Map<String, Integer> sumStockMap = sumStockInInventory.stream().collect(Collectors.toMap(BookInventoryVo::getBookCode, BookInventoryVo::getInventory));
+
+		for (BookInventoryVo inventory : inventoryList) {
+	        Integer sumQuantity = sumStockMap.get(inventory.getBookCode());
+	        if (sumQuantity != null) {
+	            inventory.setSumInInventory(sumQuantity);
+	        }
+	    }
+		
+		List<BookInventoryVo> sumStockOutInventory = bookInventoryDao.sumStockOut(params);
+		sumStockMap = sumStockOutInventory.stream().collect(Collectors.toMap(BookInventoryVo::getBookCode, BookInventoryVo::getInventory));
+		for (BookInventoryVo inventory : inventoryList) {
+	        Integer sumQuantity = sumStockMap.get(inventory.getBookCode());
+	        if (sumQuantity != null) {
+	            inventory.setSumOutInventory(sumQuantity);
+	        }
+	    }
+		return inventoryList;
 	}
 
-	
 }

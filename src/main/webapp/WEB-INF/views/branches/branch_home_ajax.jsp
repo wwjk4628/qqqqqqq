@@ -14,8 +14,8 @@
 <title>지점 관리 시스템</title>
 <link rel="stylesheet" type="text/css"
 	href="<c:url value='/css/branches.css'/>">
-<script src="<c:url value='/javascript/inven.js'/>"></script>
 
+<script src="<c:url value='/javascript/inven.js'/>"></script>
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/branch_includes/navigation.jsp"%>
@@ -34,7 +34,7 @@
 			<button type="button" id="resetOrderBy">정렬 초기화</button>
 		</form>
 		<br />
-		<table id="table">
+		<table id="inventory-table">
 		</table>
 		<p>
 			<a href="<c:url value='/branch/order/list'/>">오더 리스트 보기</a>

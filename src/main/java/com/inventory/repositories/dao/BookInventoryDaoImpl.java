@@ -60,7 +60,14 @@ public class BookInventoryDaoImpl implements BookInventoryDao {
 		List <BookInventoryVo> list = sqlSession.selectList("bookInventory.dynamicInvenList", params);
 		return list;
 	}
-	
-	
 
+	@Override
+	public List<BookInventoryVo> sumStockIn(Map<String, Object> params) {
+		return sqlSession.selectList("bookInventory.inInventorySum", params);
+	}
+
+	@Override
+	public List<BookInventoryVo> sumStockOut(Map<String, Object> params) {
+		return sqlSession.selectList("bookInventory.outInventorySum", params);
+	}
 }

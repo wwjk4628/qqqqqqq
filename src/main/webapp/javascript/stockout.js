@@ -49,6 +49,7 @@ function initializeLocalStorage(data) {
     const quantities = {};
     const comments = {};
     const bookNames = {};
+    const inventories = {};
 
 	// bookCode 기반의 빈 배열 만들어놓기
     data.forEach(item => {
@@ -56,12 +57,14 @@ function initializeLocalStorage(data) {
         quantities[bookCode] = null;
         comments[bookCode] = comments[bookCode] || '';
         bookNames[bookCode] = item.bookName;
+        inventories[bookCode] = item.inventory;
     });
 
 	// localStorage에 json으로 배열 저장
     localStorage.setItem('quantities', JSON.stringify(quantities));
     localStorage.setItem('comments', JSON.stringify(comments));
     localStorage.setItem('bookNames', JSON.stringify(bookNames));
+    localStorage.setItem('inventories', JSON.stringify(inventories));
 }
 
 // 검색 결과를 페이지에 업데이트
@@ -223,12 +226,15 @@ function addGije() {
     const quantities = JSON.parse(localStorage.getItem('quantities') || '{}');
     const comments = JSON.parse(localStorage.getItem('comments') || '{}');
     const bookNames = JSON.parse(localStorage.getItem('bookNames') || '{}');
+    const inventories = JSON.parse(localStorage.getItem('inventories') || '{}');
 
     // LocalStorage의 모든 항목 불러오기
     Object.keys(quantities).forEach(bookCode => {
-        const quantity = quantities[bookCode];
+        const quantity = parseInt(quantities[bookCode], 10) || 0;
         const comment = comments[bookCode] || '';
         const bookName = bookNames[bookCode] || '정보 없음';
+        const inventory = parseInt(inventories[bookCode], 10) || 0;
+        const expectedInventory = (inventory-quantity);
         
         // 수량이 0보다 큰 경우만 모달에 추가
         if (quantity > 0) {
@@ -237,6 +243,7 @@ function addGije() {
                     <p><strong>교재명:</strong> ${bookName}</p>
                     <p><strong>수량:</strong> ${quantity}</p>
                     <p><strong>코멘트:</strong> ${comment}</p>
+                    <p><strong>예상 재고:</strong> ${expectedInventory}</p>
                     <button type="button" onclick="deleteGije('${bookCode}')" class="delete">삭제</button>
                     <hr>
                 </div>

@@ -39,49 +39,35 @@ public class InitialSettingController {
 	StockService stockService;
 	@Autowired
 	OrderCheckService orderCheckService;
-	
-	
-//	@RequestMapping("/setting")
-//	public String moveToInitialSettingPage(HttpSession session) {
-//		
-//		//	교재 선택 리스트 출력
-//		UserVo vo = (UserVo)session.getAttribute("authUser");
-//		List<BookInventoryVo> list = bookInventoryService.getList(vo.getBranchId());
-//		session.setAttribute("authUser", vo);
-//		session.setAttribute("initialList", list);
-//		
-//		//	카트 리스트 표시
-//		List<OrderVo> cartList = (List<OrderVo>) session.getAttribute("initialCart");
-//		session.setAttribute("initialCart", cartList);
-//		
-//		return "branches/initial_setting/initial_setting_form";
-//	}
+
 	
 	@RequestMapping("/setting/form")
     public String moveToStockOutFrom(HttpSession session) {
     	UserVo vo = (UserVo)session.getAttribute("authUser");
 		session.setAttribute("authUser", vo);
-		return "branches/initial_setting/initial_setting_form2";
+		return "branches/initial_setting/initial_setting_form";
     }
 	
 	@RequestMapping(value = "/getListForform", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public List<BookInventoryVo> getListForform(HttpSession session) {
         UserVo vo = (UserVo) session.getAttribute("authUser");
-        return bookInventoryService.getList(vo.getBranchId());
+        Map <String, Object> params = new HashMap<>();
+        params.put("branchId", vo.getBranchId());
+        params.put("orderBy", "kindcode desc, book_name asc");
+        return bookInventoryService.invenList(params);
     }
 	
 	@RequestMapping(value = "/search", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public List<BookInventoryVo> search(HttpSession session, @RequestParam("keyword") String keyword,
-    		@RequestParam(value = "orderBy", defaultValue = "CASE WHEN inventory > 0 THEN 1 ELSE 2 END ASC, kindcode ASC") String orderBy) {
+    		@RequestParam(value = "orderBy", defaultValue = "kindcode desc, book_name asc") String orderBy) {
         UserVo vo = (UserVo) session.getAttribute("authUser");
         
         Map <String, Object> params = new HashMap<>();
 		params.put("branchId", vo.getBranchId());
 	    params.put("keyword", keyword != null ? keyword : "");
 	    params.put("orderBy", orderBy != null ? orderBy.trim() : null);
-        
         return bookInventoryService.invenList(params);
     }
 	

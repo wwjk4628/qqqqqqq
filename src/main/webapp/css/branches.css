@@ -414,3 +414,7 @@ footer {
 	max-height: calc(80vh - 50px);
 	overflow-y: auto; /* 세로 스크롤 */
 }
+
+#inventory-table{
+	width: 100%;
+}

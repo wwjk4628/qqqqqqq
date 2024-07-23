@@ -1,6 +1,8 @@
 package com.inventory.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,20 +52,24 @@ public class StockOutController {
     @ResponseBody
     public List<BookInventoryVo> getListForform(HttpSession session) {
         UserVo vo = (UserVo) session.getAttribute("authUser");
-        return bookInvenService.checkedGetList(vo.getBranchId());
+        Map <String, Object> params = new HashMap<>();
+        params.put("branchId", vo.getBranchId());
+        params.put("check", "check");
+        params.put("orderBy", "kindcode desc, book_name asc");
+        return bookInvenService.invenList(params);
     }
     
     @RequestMapping(value = "/search", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public List<BookInventoryVo> search(HttpSession session, @RequestParam("keyword") String keyword) {
         UserVo vo = (UserVo) session.getAttribute("authUser");
-        List<BookInventoryVo> list;
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            list = bookInvenService.checkedSearch(vo.getBranchId(), keyword);
-        } else {
-            list = bookInvenService.checkedGetList(vo.getBranchId());
-        }
-        return list;
+        Map <String, Object> params = new HashMap<>();
+        params.put("branchId", vo.getBranchId());
+        params.put("check", "check");
+        params.put("orderBy", "kindcode desc, book_name asc");
+        params.put("keyword", keyword != null ? keyword : "");
+
+        return bookInvenService.invenList(params);
     }
     
     @RequestMapping("/confirm")

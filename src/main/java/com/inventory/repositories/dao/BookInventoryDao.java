@@ -16,4 +16,7 @@ public interface BookInventoryDao {
 	public List <BookInventoryVo> checkedSearch(String id, String keyword);
 	
 	public List <BookInventoryVo> invenList(Map <String, Object> params);
+	
+	public List <BookInventoryVo> sumStockIn(Map<String, Object> params);
+	public List <BookInventoryVo> sumStockOut(Map <String, Object> params);
 }
