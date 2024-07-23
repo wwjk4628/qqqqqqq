@@ -108,24 +108,24 @@ document.addEventListener('DOMContentLoaded', function() {
         table1.innerHTML = `
             <thead>
                 <tr>
-                    <th rowspan="2">번호</th>
-                    <th onclick="updateOrderBy('kindcode')" rowspan="2">분류
+                    <th rowspan="2" class = "mordan">번호</th>
+                    <th onclick="updateOrderBy('kindcode')" rowspan="2" class = "mordan">분류
                         ${orderBy.includes('kindcode asc') ? '▲' : orderBy.includes('kindcode desc') ? '▼' : ''}
                     </th>
-                    <th onclick="updateOrderBy('bookName')" rowspan="2">책 이름
+                    <th onclick="updateOrderBy('bookName')" rowspan="2" class = "mordan">책 이름
                         ${orderBy.includes('bookName asc') ? '▲' : orderBy.includes('bookName desc') ? '▼' : ''}
                     </th>
-                    <th onclick="updateOrderBy('price')" rowspan="2">가격
+                    <th onclick="updateOrderBy('price')" rowspan="2" class = "mordan">가격
                         ${orderBy.includes('price asc') ? '▲' : orderBy.includes('price desc') ? '▼' : ''}
                     </th>
-                    <th onclick="updateOrderBy('inventory')" rowspan="2"><strong>현재 재고
+                    <th onclick="updateOrderBy('inventory')" rowspan="2" class = "mordan">현재 재고
                         ${orderBy.includes('inventory asc') ? '▲' : orderBy.includes('inventory desc') ? '▼' : ''}
-                    </strong></th>
-                    <th rowspan="2">재고*가격</th>
-                    <th onclick="updateOrderBy('inDate')" rowspan="2">최근 입고일
+                    </th>
+                    <th rowspan="2" class = "mordan">재고*가격</th>
+                    <th onclick="updateOrderBy('inDate')" rowspan="2" class = "mordan">최근 입고일
                         ${orderBy.includes('inDate asc') ? '▲' : orderBy.includes('inDate desc') ? '▼' : ''}
                     </th>
-                    <th onclick="updateOrderBy('outDate')" rowspan="2">최근 출고일
+                    <th onclick="updateOrderBy('outDate')" rowspan="2" class = "mordan">최근 출고일
                         ${orderBy.includes('outDate asc') ? '▲' : orderBy.includes('outDate desc') ? '▼' : ''}
                     </th>
                 </tr>
@@ -137,17 +137,17 @@ document.addEventListener('DOMContentLoaded', function() {
         table2.innerHTML = `
             <thead>
                 <tr>
-                    <th rowspan="2">번호</th>
-                    <th onclick="updateOrderBy('kindcode')" rowspan="2">분류
+                    <th rowspan="2" class = "mordan">번호</th>
+                    <th onclick="updateOrderBy('kindcode')" rowspan="2" class = "mordan">분류
                         ${orderBy.includes('kindcode asc') ? '▲' : orderBy.includes('kindcode desc') ? '▼' : ''}
                     </th>
-                    <th onclick="updateOrderBy('bookName')" rowspan="2">책 이름
+                    <th onclick="updateOrderBy('bookName')" rowspan="2" class = "mordan">책 이름
                         ${orderBy.includes('bookName asc') ? '▲' : orderBy.includes('bookName desc') ? '▼' : ''}
                     </th>
-                    <th onclick="updateOrderBy('price')" rowspan="2">가격
+                    <th onclick="updateOrderBy('price')" rowspan="2" class = "mordan">가격
                         ${orderBy.includes('price asc') ? '▲' : orderBy.includes('price desc') ? '▼' : ''}
                     </th>
-                    <th onclick="updateOrderBy('inventory')" rowspan="2">현재 재고
+                    <th onclick="updateOrderBy('inventory')" rowspan="2" class = "mordan">현재 재고
                         ${orderBy.includes('inventory asc') ? '▲' : orderBy.includes('inventory desc') ? '▼' : ''}
                     </th>
                     <th class="date-input-th" colspan="2">

@@ -419,14 +419,14 @@ footer {
 	width: 100%;
 }
 
-.inventory-table thead th {
+/*.inventory-table thead th {
     background-color: #f2f2f2;
     position: sticky;
-    top: 0; /* 스크롤할 때 헤더가 상단에 고정되도록 설정 */
+    top: 0; 
     z-index: 10;
 	padding: 8px;
     text-align: left;
-}
+}*/
 
 .table-container::-webkit-scrollbar {
     width: 10px;
@@ -448,7 +448,14 @@ footer {
     z-index: 9; /* 다른 <th> 요소보다 높이 설정 */
 }
 
+.mordan {
+    position: sticky;
+    top: 0;
+    background-color: #f2f2f2;
+    z-index: 9; /* 다른 <th> 요소보다 높이 설정 */
+}
+
 .sita {
 	position: sticky;
-	top: 50px;
+	top: 47px;
 }
