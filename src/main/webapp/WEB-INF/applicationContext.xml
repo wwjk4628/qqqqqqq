@@ -33,10 +33,10 @@
 
     <!-- Oracle DataSource -->
     <bean id="oracleDatasource" class="oracle.jdbc.pool.OracleDataSource">
-        <property name="URL" value="jdbc:oracle:thin:@192.168.0.64:1521:xe" />
-        <property name="user" value="team2project" />
-        <property name="password">
-            <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="URL" value="jdbc:oracle:thin:@localhost:1521:xe" />
+        <property name="user" value="project1" />
+        <property name="password" value="project1" />
+            <!-- <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
                 <property name="targetObject" ref="encryptedPropertyLoader" />
                 <property name="targetMethod" value="decrypt" />
                 <property name="arguments">
@@ -45,7 +45,7 @@
                     </list>
                 </property>
             </bean>
-        </property>
+        </property> -->
         <property name="implicitCachingEnabled" value="true" />
     </bean>
     

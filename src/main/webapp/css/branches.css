@@ -459,3 +459,17 @@ footer {
 	position: sticky;
 	top: 47px;
 }
+
+/*  .sorted-asc::after {
+    content: ' ▲';
+}
+.sorted-desc::after {
+    content: ' ▼';
+}*/
+.sortable {
+    cursor: pointer;
+}
+.sort-indicator {
+    margin-left: 5px;
+}
+

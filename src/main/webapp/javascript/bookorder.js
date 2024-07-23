@@ -2,7 +2,8 @@
  * 
  */$(document).ready(function() {
         var quantityMap = {}; // 수량 맵 초기화
-
+		var sortOrders = {}; // 각 컬럼의 정렬 순서를 저장
+		var sortOrder = ''; // 현재 정렬 순서 (asc, desc, '')
         // CSRF 토큰 설정
         var csrfHeaderName = $('meta[name="_csrf_header"]').attr('content');
         var csrfToken = $('meta[name="_csrf"]').attr('content');
@@ -34,26 +35,34 @@
 });
 
         // 모든 데이터를 로드하는 함수
-        function loadAllData() {
-            $.ajax({
-                url: '/Inventory/branch/order/getData',
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    quantityMap = {}; // 수량 맵 초기화
-                    renderData(data); // 데이터를 렌더링
-                    updateCart(); // 장바구니 업데이트
-                    renderHeader(data);
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX Error: ' + status + ' - ' + error);
-                    $("#result").html("An error occurred while processing the request.");
-                }
-            });
-        }
+		function loadAllData() {
+		    $.ajax({
+		        url: '/Inventory/branch/order/getData',
+		        type: 'GET',
+		        dataType: 'json',
+		        success: function(data) {
+		            quantityMap = {}; // 수량 맵 초기화
+		            // 초기 정렬 상태 설정
+		            sortOrders = {
+		                'kindCode': 'desc',
+		                'bookName': 'asc'
+		            };
+		            renderData(data); // 데이터를 렌더링
+		            updateCart(); // 장바구니 업데이트
+		            renderHeader(data);
+		            updateSortIndicators(); // 정렬 표시 업데이트
+		        },
+		        error: function(xhr, status, error) {
+		            console.error('AJAX Error: ' + status + ' - ' + error);
+		            $("#result").html("An error occurred while processing the request.");
+		        }
+		    });
+		}
 
         // 통화 형식 변환기 설정
-        var currencyFormatter = new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' });
+		function formatNumberWithCommas(number) {
+		    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		}
         
         function renderHeader(dataArray) {
             if (dataArray.length > 0) {
@@ -68,23 +77,25 @@
         
         // 데이터를 렌더링하는 함수
         function renderData(data) {
-            var resultHtml = '<table>' +
-                             '<thead>' +
-                             '<tr>' +
-                             '<th>과목 코드</th>' +
-                             '<th>교재명</th>' +
-                             '<th>재고</th>' +
-                             '<th>가격</th>' +
-                             '<th>수량</th>' +
-                             '</tr>' +
-                             '</thead>' +
-                             '<tbody>';
+			var resultHtml = '<table>' +
+			                        '<thead>' +
+			                        '<tr>' +
+									'<th>번호</th>' + // Index 추가
+			                        '<th class="sortable" data-column="kindCode">과목 코드</th>' +
+			                        '<th class="sortable" data-column="bookName">교재명</th>' +
+			                        '<th class="sortable" data-column="inventory">재고</th>' +
+			                        '<th class="sortable" data-column="price">가격</th>' +
+			                        '<th>수량</th>' +
+			                        '</tr>' +
+			                        '</thead>' +
+			                        '<tbody>';
 
-            data.forEach(function(book) {
+            data.forEach(function(book, index) {
                 var selectedQuantity = quantityMap[book.bookCode] ? quantityMap[book.bookCode].quantity : 0;
-                var formattedPrice = currencyFormatter.format(book.price); // 가격을 통화 형식으로 변환
+                var formattedPrice = formatNumberWithCommas(book.price);
                 resultHtml += '<tr>' +
-                              '<td>' + book.kindCode + '</td>' +
+							  '<td>' + (index + 1) + '</td>' + // Index 표시
+                              '<td>' + convertKindCode(book.kindCode) + '</td>' +
                               '<td>' + book.bookName + '</td>' +
                               '<td>' + book.inventory + '</td>' +
                               '<td>' + formattedPrice + '</td>' +
@@ -100,6 +111,13 @@
 
             resultHtml += '</tbody></table>';
             $("#result").html(resultHtml);
+			
+
+			// 정렬 이벤트 리스너 추가
+			$(".sortable").click(function(e) { // 'e' 매개변수 추가
+			    var column = $(this).data('column');
+			    sortData(column, data, e.shiftKey);
+			});
 
             // 수량 입력이 변경될 때 이벤트 처리
             $(".quantityInput").on('input', function() {
@@ -126,6 +144,77 @@
                 //updateCart(); // 장바구니 업데이트
             });
         }
+		
+		// 과목 코드를 한글로 변환하는 함수
+		 function convertKindCode(kindCode) {
+			 switch (kindCode) {
+				 case '1':
+					 return "초등";
+				 case '2':
+					 return "중등";
+				 case '3':
+					 return "고등";
+				 case '4':
+					 return "수능";
+				 default:
+					 console.log("Unhandled kindCode value: " + kindCode);
+					 return "기타";
+			 }
+		 }
+		
+		// 데이터 정렬 함수
+		function sortData(column, data, isMultiSort) {
+		    
+
+		    if (column in sortOrders) {
+		        if (sortOrders[column] === 'asc') {
+		            sortOrders[column] = 'desc';
+		        } else if (sortOrders[column] === 'desc') {
+		            delete sortOrders[column];
+		        }
+		    } else {
+		        sortOrders[column] = 'asc';
+		    }
+
+		    data.sort(function(a, b) {
+		        for (var key in sortOrders) {
+		            var valueA = a[key];
+		            var valueB = b[key];
+		            
+		            if (key === 'inventory' || key === 'price') {
+		                valueA = parseFloat(valueA);
+		                valueB = parseFloat(valueB);
+		            }
+
+		            if (valueA !== valueB) {
+		                return sortOrders[key] === 'asc' ? 
+		                    (valueA > valueB ? 1 : -1) : 
+		                    (valueA < valueB ? 1 : -1);
+		            }
+		        }
+		        return 0;
+		    });
+
+		    renderData(data);
+		    updateSortIndicators();
+		}
+
+		// 정렬 상태 표시 업데이트 함수
+		function updateSortIndicators() {
+		    $(".sortable").removeClass('sorted-asc sorted-desc').find('.sort-indicator').remove();
+		    var sortIndex = 1;
+		    for (var column in sortOrders) {
+		        var th = $(`th[data-column="${column}"]`);
+		        th.addClass(`sorted-${sortOrders[column]}`);
+		        th.append(`<span class="sort-indicator">${getSortSymbol(sortOrders[column])}${sortIndex}</span>`);
+		        sortIndex++;
+		    }
+		}
+
+		// 정렬 심볼 반환 함수
+		function getSortSymbol(order) {
+		    return order === 'asc' ? ' ▲' : ' ▼';
+		}
 
         // 장바구니를 업데이트하는 함수
         function updateCart() {
@@ -258,25 +347,26 @@
             }
         });
 
-        // 검색 버튼 클릭 이벤트 처리
-        $("#searchBtn").click(function() {
-            var query = $("#searchInput").val();
-            var ordering = $("#ordering").val();
-            var key = $("#key").val();
-            $.ajax({
-                url: '/Inventory/branch/order/searchBooks',
-                type: 'GET',
-                data: { query: query , ordering: ordering, key: key},
-                dataType: 'json',
-                success: function(data) {
-                    renderData(data); // 검색 결과 렌더링
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX Error: ' + status + ' - ' + error);
-                    $("#result").html("An error occurred while processing the request.");
-                }
-            });
-        });
+		// searchBtn 클릭 이벤트 수정
+		$("#searchBtn").click(function() {
+		    var query = $("#searchInput").val();
+		    var ordering = $("#ordering").val();
+		    var key = $("#key").val();
+		    $.ajax({
+		        url: '/Inventory/branch/order/searchBooks',
+		        type: 'GET',
+		        data: { query: query, ordering: ordering, key: key },
+		        dataType: 'json',
+		        success: function(data) {
+		            sortOrders = {}; // sortColumn 대신 sortOrders 초기화
+		            renderData(data); // 검색 결과 렌더링
+		        },
+		        error: function(xhr, status, error) {
+		            console.error('AJAX Error: ' + status + ' - ' + error);
+		            $("#result").html("An error occurred while processing the request.");
+		        }
+		    });
+		});
 
         // 장바구니 추가 버튼 클릭 이벤트 처리
         $("#saveBtn").click(function() {
