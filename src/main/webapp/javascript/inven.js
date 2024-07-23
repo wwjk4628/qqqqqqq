@@ -119,17 +119,18 @@ document.addEventListener('DOMContentLoaded', function() {
 	                <th onclick="updateOrderBy('outDate')" rowspan="2">최근 출고일
 	                    ${orderBy.includes('outDate asc') ? '▲' : orderBy.includes('outDate desc') ? '▼' : ''}
 	                </th>
-	                <th>
+	                <th colspan ="2">
 	                	<input type="date" id="startDate" />
 	                </th>
-	                <th>
+	                <th colspan ="2">
 	                	<input type="date" id = "endDate"/>
 	                </th>
-	                <th rowspan="2">예상 재고</th>
 				</tr>
 				<tr>
+					<th>시작 재고</th>
 					<th>입고 총합</th>
-					<th>출고 총합</th>				
+					<th>출고 총합</th>	
+					<th>예상 재고</th>		
 				</tr>
 			</thead>
 			<tbody id="table-body">
@@ -145,10 +146,11 @@ document.addEventListener('DOMContentLoaded', function() {
 				<td>${getKindCode(item.kindCode)}</td>
 				<td>${item.bookName}</td>
 				<td>${numberFormatter.format(item.price)}</td>
-                <td>${numberFormatter.format(item.inventory)}</td>
+                <td><strong>${numberFormatter.format(item.inventory)}</strong></td>
                 <td>${numberFormatter.format(item.inventory * item.price)}</td>
         		<td>${item.inDate }</td>
         		<td>${item.outDate }</td>
+        		<td>${numberFormatter.format(item.startInventory)}</td>
         		<td>${numberFormatter.format(item.sumInInventory)}</td>
         		<td>${numberFormatter.format(item.sumOutInventory)}</td>
         		<td>${numberFormatter.format(item.sumInInventory - item.sumOutInventory)}</td>

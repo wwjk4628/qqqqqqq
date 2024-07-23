@@ -73,10 +73,10 @@
 		select book_code as bookCode, sum(quantity) as inventory from stock_in si join in_detail id on si.in_id = id.in_id 
 		where branch_id = #{branchId}
 		<if test = "startDate != null and startDate.trim() != ''">
-			and in_date > #{startDate}
+			<![CDATA[and in_date >= #{startDate}]]>
 		</if>
 		<if test="endDate != null and endDate.trim() != ''">
-        	<![CDATA[and in_date < #{endDate}]]>
+        	<![CDATA[and in_date < TO_DATE(#{endDate}, 'YYYY/MM/DD') + 1]]>
     	</if>
 		group by book_code
 	</select>
@@ -86,11 +86,29 @@
 		select book_code as bookCode, sum(quantity) as inventory from stock_out so join out_detail od on so.out_id = od.out_id 
 		where branch_id = #{branchId}
 		<if test = "startDate != null and startDate.trim() != ''">
-			and out_date > #{startDate}
+			<![CDATA[and out_date >= #{startDate}]]>
 		</if>
 		<if test="endDate != null and endDate.trim() != ''">
-        	<![CDATA[and out_date < #{endDate}]]>
+        	<![CDATA[and out_date < TO_DATE(#{endDate}, 'YYYY/MM/DD') + 1]]>
     	</if>
 		group by book_code
+	</select>
+	
+	<select id = "shikanokonokonoko" parameterType = "map" resultType = "BookInventoryVo">
+		select book_code as bookCode, sum(quantity) as inventory from stock_in si join in_detail id on si.in_id = id.in_id 
+		where branch_id = #{branchId}
+		<![CDATA[and in_date < TO_DATE(#{startDate}, 'YYYY/MM/DD')]]>
+		group by book_code
+	</select>
+	
+	<select id="koshitanntann" parameterType = "map" resultType = "BookInventoryVo">
+		select book_code as bookCode, sum(quantity) as inventory from stock_out so join out_detail od on so.out_id = od.out_id 
+		where branch_id = #{branchId}
+		<![CDATA[and out_date < TO_DATE(#{startDate}, 'YYYY/MM/DD')]]>
+		group by book_code
+	</select>
+	
+	<select id = "getBranchNameByBranchId" parameterType = "String" resultType="String">
+		select branch_name as branchName from branch where branch_id = #{branch_id}
 	</select>
 </mapper>

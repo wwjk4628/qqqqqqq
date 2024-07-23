@@ -35,21 +35,6 @@ public class BookInventoryDaoImpl implements BookInventoryDao {
 	}
 
 	@Override
-	public List<BookInventoryVo> checkedList(String id) {
-		List<BookInventoryVo> list = sqlSession.selectList("bookInventory.selectInventoryCheck", id);
-		return list;
-	}
-
-	@Override
-	public List<BookInventoryVo> checkedSearch(String id, String keyword) {
-		Map <String, String> map = new HashMap<>();
-		map.put("id", id);
-		map.put("keyword", keyword);
-		List <BookInventoryVo> list = sqlSession.selectList("bookInventory.searchInventoryCheck", map);
-		return list;
-	}
-
-	@Override
 	public int getInventory(BookInventoryVo vo) {
 		int inventory = sqlSession.selectOne("bookInventory.getInventory", vo);
 		return inventory;
@@ -69,5 +54,20 @@ public class BookInventoryDaoImpl implements BookInventoryDao {
 	@Override
 	public List<BookInventoryVo> sumStockOut(Map<String, Object> params) {
 		return sqlSession.selectList("bookInventory.outInventorySum", params);
+	}
+
+	@Override
+	public String getBranchName(String branchId) {
+		return sqlSession.selectOne("bookInventory.getBranchNameByBranchId", branchId);
+	}
+
+	@Override
+	public List<BookInventoryVo> sumStockInBefore(Map<String, Object> params) {
+		return sqlSession.selectList("bookInventory.shikanokonokonoko", params);
+	}
+
+	@Override
+	public List<BookInventoryVo> sumStockOutBefore(Map<String, Object> params) {
+		return sqlSession.selectList("bookInventory.koshitanntann", params);
 	}
 }
